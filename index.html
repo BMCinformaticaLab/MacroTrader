@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0B0E11">
 <meta name="mobile-web-app-capable" content="yes">
-<title>MacroTrader 2.0.37 · 07/set/2026</title>
+<title>MacroTrader 2.0.39 · 07/set/2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Archivo:wght@400;500;600;700;800&family=Merriweather:wght@400;700&family=Lora:wght@400;500;600;700&family=PT+Serif:wght@400;700&family=Playfair+Display:wght@500;600;700&family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -2137,6 +2137,14 @@
   .ct-clear-btn:hover{
     background:rgba(225,82,107,.2) !important;
   }
+  .ct-empty-banner{
+    margin:12px 0 4px 0; padding:12px 14px; border-radius:10px;
+    border:1px solid rgba(0,194,168,.35);
+    background:rgba(0,194,168,.08);
+    color:var(--text); font-size:13px; line-height:1.45;
+  }
+  .ct-empty-banner b{color:var(--teal);}
+
   .header-global-actions .account-entry-btn{
     height:34px; margin-left:4px;
   }
@@ -3605,7 +3613,7 @@
   }
 </style>
 </head>
-<body>
+<body class="light">
 
 <div class="sector-picker-bar market-br" id="sectorPickerBar">
   <div class="brand-logo" title="MacroTrader">
@@ -3691,7 +3699,7 @@
 
 <div class="page-layout">
 <div class="cal-column" id="calColumn">
-<div class="cal-root" id="calRoot">
+<div class="cal-root light" id="calRoot">
   <div class="cal-panel-title">
     <div class="cal-panel-brand">
       <div class="cal-panel-mark" aria-hidden="true">
@@ -5676,11 +5684,11 @@
   }
 
   async function loadTheme(){
-    let mode = 'dark';
+    let mode = 'light'; /* padrão para novos usuários */
     try{
       const res = await storageGet(THEME_KEY);
       if(res && res.value) mode = res.value;
-    }catch(e){ mode = 'dark'; }
+    }catch(e){ mode = 'light'; }
     applyTheme(mode);
   }
 
@@ -13516,92 +13524,12 @@ contextCharts: [
     return h;
   }
   function ctDefaultSeed(){
+    /* Público: carteira vazia — dados pessoais nunca no HTML */
     return {
-      positions: [
-        {id:ctUid(), asset:'BBAS3', market:'B3', segment:'Financeiro', qty:700, avg:22.35, price:19.92, note:''},
-        {id:ctUid(), asset:'TOTS3', market:'B3', segment:'Tecnologia', qty:200, avg:34.17, price:0, note:''},
-        {id:ctUid(), asset:'BBDC4', market:'B3', segment:'Financeiro', qty:300, avg:17.36, price:0, note:''},
-        {id:ctUid(), asset:'PETR4', market:'B3', segment:'Petroleo', qty:18, avg:37.81, price:0, note:''}
-      ],
-      stockOps: [
-        {id:ctUid(), date:'2026-07-06', market:'B3', asset:'PETR4', side:'Compra', qty:18, unit:37.81, fees:0, note:''}
-      ],
-      optionOps: [
-        {id:ctUid(), date:'2025-01-06', month:'2026-01', asset:'WEGEA567', segment:'Bens Industriais', strike:0, type:'Compra de CALL', qty:100.0, exp:'', premium:0, debit:0, result:10.0, note:'Zeragem'},
-        {id:ctUid(), date:'2025-01-16', month:'2026-01', asset:'BPACM310', segment:'Financeiro', strike:0, type:'Compra de PUT', qty:200.0, exp:'', premium:78.0, debit:0, result:104.0, note:'Opção zerada 1 dia antes do vencimento'},
-        {id:ctUid(), date:'2025-01-23', month:'2026-01', asset:'WEGEB585', segment:'Bens Industriais', strike:0, type:'venda de CALL', qty:-100.0, exp:'', premium:101.0, debit:0, result:101.0, note:''},
-        {id:ctUid(), date:'2025-01-27', month:'2026-01', asset:'BBASC281', segment:'Financeiro', strike:0, type:'venda de CALL', qty:-100.0, exp:'', premium:183.0, debit:0, result:183.0, note:''},
-        {id:ctUid(), date:'2026-01-06', month:'2026-01', asset:'BBASB288', segment:'Financeiro', strike:22.74, type:'venda de CALL', qty:700.0, exp:'2025-02-20', premium:448.0, debit:0, result:448.0, note:''},
-        {id:ctUid(), date:'2026-01-08', month:'2026-01', asset:'PETRB420 + PERTN299', segment:'Petroleo', strike:28.65, type:'Venda de Strangle Coberta', qty:200.0, exp:'2026-02-20', premium:152.0, debit:0, result:152.0, note:''},
-        {id:ctUid(), date:'2026-01-26', month:'2026-01', asset:'ASAIC879 +ASAI0760', segment:'Consumo', strike:8.7, type:'Venda de CALL +  PUT', qty:800.0, exp:'2026-03-20', premium:245.0, debit:0, result:245.0, note:'Estrategia criada pois aparentemente na analise tecnica foi absorvida a demanda vendedora estabilizando preço e com a intenção de desfazer a posição perdedora em ASAI3'},
-        {id:ctUid(), date:'2026-01-01', month:'2026-01', asset:'DIRRN152', segment:'Construção Civil', strike:13.73, type:'Venda de put', qty:-700.0, exp:'', premium:518.0, debit:0, result:518.0, note:''},
-        {id:ctUid(), date:'2026-02-05', month:'2026-02', asset:'MBRF0170', segment:'Consumo', strike:17.09, type:'Venda de PUT', qty:-300.0, exp:'2026-03-20', premium:189.0, debit:0, result:189.0, note:''},
-        {id:ctUid(), date:'2026-02-12', month:'2026-02', asset:'BBASB228', segment:'Financeiro', strike:22.72, type:'Rolagem', qty:-700.0, exp:'2026-03-20', premium:245.0, debit:0, result:245.0, note:'aproveitei a alta volatilidade para rolar o ativo'},
-        {id:ctUid(), date:'2026-02-20', month:'2026-02', asset:'PTRC396', segment:'Petroleo', strike:38.9, type:'Venda de CALL descoberta', qty:-200.0, exp:'2026-03-20', premium:0, debit:64.0, result:-64.0, note:'Stop acionado'},
-        {id:ctUid(), date:'2026-02-20', month:'2026-02', asset:'TOTS365', segment:'Tecnologia', strike:36.52, type:'Venda de PUT', qty:-100.0, exp:'2026-04-17', premium:120.0, debit:0, result:120.0, note:''},
-        {id:ctUid(), date:'2026-02-01', month:'2026-02', asset:'VIVA0274', segment:'Consumo', strike:26.77, type:'Venda de PUT', qty:-200.0, exp:'2026-03-20', premium:270.0, debit:0, result:270.0, note:''},
-        {id:ctUid(), date:'2026-02-23', month:'2026-02', asset:'PETRC412', segment:'Petroleo', strike:40.4, type:'Venda de CALL descoberta', qty:-200.0, exp:'2026-03-20', premium:0, debit:36.0, result:-36.0, note:''},
-        {id:ctUid(), date:'2026-03-12', month:'2026-03', asset:'BBASD228', segment:'Financeiro', strike:22.52, type:'Rolagem de CALL', qty:-700.0, exp:'2026-04-17', premium:240.0, debit:0, result:240.0, note:''},
-        {id:ctUid(), date:'2026-03-13', month:'2026-03', asset:'VIVAQ266', segment:'Consumo', strike:26.64, type:'Rolagem de PUT', qty:-200.0, exp:'2026-05-15', premium:44.0, debit:0, result:44.0, note:''},
-        {id:ctUid(), date:'2026-03-13', month:'2026-03', asset:'DIRRP138', segment:'Construção Civil', strike:13.83, type:'Venda de PUT', qty:-800.0, exp:'2026-04-17', premium:618.0, debit:0, result:618.0, note:''},
-        {id:ctUid(), date:'2026-03-13', month:'2026-03', asset:'POMOP596', segment:'Bens Industriais', strike:5.96, type:'Venda de PUT', qty:-700.0, exp:'2026-04-17', premium:140.0, debit:0, result:140.0, note:''},
-        {id:ctUid(), date:'2026-03-13', month:'2026-03', asset:'VIVAQ266', segment:'Consumo', strike:26.77, type:'Rolagem dePUT', qty:-200.0, exp:'', premium:44.0, debit:25.0, result:19.0, note:'taxas de 25 reais de clearing'},
-        {id:ctUid(), date:'2026-03-17', month:'2026-03', asset:'PETRD336', segment:'Petroleo', strike:31.4, type:'Rolagem de PUT', qty:-200.0, exp:'2026-04-17', premium:37.6, debit:0, result:37.6, note:''},
-        {id:ctUid(), date:'2026-03-19', month:'2026-03', asset:'ASAI0760', segment:'Consumo', strike:7.6, type:'Recompra PUT', qty:-300.0, exp:'2026-03-20', premium:0, debit:15.0, result:-15.0, note:''},
-        {id:ctUid(), date:'2026-03-20', month:'2026-03', asset:'MBRFP169', segment:'Consumo', strike:16.94, type:'Rolagem de PUT', qty:-300.0, exp:'2026-04-17', premium:117.0, debit:6.0, result:111.0, note:''},
-        {id:ctUid(), date:'2026-03-12', month:'2026-03', asset:'BBASD228', segment:'Financeiro', strike:22.75, type:'Rolagem de CALL', qty:-700.0, exp:'2026-04-17', premium:210.0, debit:0, result:210.0, note:''},
-        {id:ctUid(), date:'2026-03-27', month:'2026-03', asset:'ASAIE98', segment:'Consumo', strike:9.8, type:'Venda de CALL', qty:500.0, exp:'2026-05-15', premium:120.0, debit:0, result:120.0, note:''},
-        {id:ctUid(), date:'2026-03-30', month:'2026-03', asset:'BBDCQ180', segment:'Financeiro', strike:18.09, type:'Venda de PUT', qty:-300.0, exp:'2026-05-15', premium:189.0, debit:25.0, result:164.0, note:'foi exercida por centavos e pagou taxa de clearing em media 25 reais'},
-        {id:ctUid(), date:'2026-03-30', month:'2026-03', asset:'QQQI11', segment:'Tecnologia', strike:86.99, type:'Venda de Ativo', qty:-147.0, exp:'', premium:0, debit:0, result:0, note:'Havia pressão vendedora e preço estava quase alcançando preço medio'},
-        {id:ctUid(), date:'2026-03-01', month:'2026-03', asset:'HYPEP230', segment:'Saúde', strike:22.54, type:'Zeragem', qty:-300.0, exp:'2026-04-17', premium:349.0, debit:6.0, result:343.0, note:''},
-        {id:ctUid(), date:'2026-04-01', month:'2026-04', asset:'EMBJQ704', segment:'Bens Industriais', strike:69.81, type:'Venda de PUT', qty:-100.0, exp:'2026-05-15', premium:152.0, debit:10.0, result:142.0, note:''},
-        {id:ctUid(), date:'2026-04-14', month:'2026-04', asset:'PRIOE795', segment:'Petroleo', strike:79.5, type:'Venda de Strangle', qty:-200.0, exp:'', premium:484.0, debit:0, result:484.0, note:''},
-        {id:ctUid(), date:'2026-04-14', month:'2026-04', asset:'PRIOQ580', segment:'Petroleo', strike:58.0, type:'Outros', qty:0, exp:'', premium:0, debit:0, result:0, note:''},
-        {id:ctUid(), date:'2026-04-20', month:'2026-04', asset:'TOTS365', segment:'Tecnologia', strike:36.14, type:'Rolagem', qty:-200.0, exp:'2026-04-17', premium:120.0, debit:0, result:100.0, note:''},
-        {id:ctUid(), date:'2026-04-17', month:'2026-04', asset:'PETRD336', segment:'Petroleo', strike:31.4, type:'Recompra', qty:-200.0, exp:'2026-04-17', premium:0, debit:0, result:100.0, note:'Recompra de call de PETR4 + venda do ativo, meu preço medio era de 29,80 em media'},
-        {id:ctUid(), date:'2026-04-17', month:'2026-04', asset:'PETRE492 + PETRQ425', segment:'Petroleo', strike:0, type:'Venda de Strangle', qty:-200.0, exp:'2026-05-15', premium:302.0, debit:0, result:302.0, note:''},
-        {id:ctUid(), date:'2026-04-23', month:'2026-04', asset:'DIRRR135', segment:'Construção Civil', strike:13.58, type:'Venda de PUT', qty:-600.0, exp:'2026-06-19', premium:521.0, debit:0, result:521.0, note:''},
-        {id:ctUid(), date:'2026-04-23', month:'2026-04', asset:'MBRF167', segment:'Consumo', strike:16.7, type:'Venda de PUT', qty:-200.0, exp:'2026-06-19', premium:126.0, debit:0, result:126.0, note:''},
-        {id:ctUid(), date:'2026-04-29', month:'2026-04', asset:'HYPER227', segment:'Saúde', strike:22.54, type:'Venda de PUT', qty:-100.0, exp:'2026-06-19', premium:80.0, debit:89.0, result:-9.0, note:''},
-        {id:ctUid(), date:'2026-05-07', month:'2026-05', asset:'AXIAR600', segment:'Energia Elétrica', strike:60.0, type:'Venda de PUT', qty:-100.0, exp:'2026-06-19', premium:250.0, debit:0, result:250.0, note:''},
-        {id:ctUid(), date:'2026-06-07', month:'2026-05', asset:'TOTSR360', segment:'Tecnologia', strike:35.89, type:'Rolagem de PUT', qty:-200.0, exp:'2026-06-19', premium:90.0, debit:0, result:90.0, note:''},
-        {id:ctUid(), date:'2026-05-14', month:'2026-05', asset:'JHSFR999', segment:'Construção Civil', strike:9.92, type:'Venda de PUT', qty:-200.0, exp:'2026-06-19', premium:60.0, debit:0, result:60.0, note:''},
-        {id:ctUid(), date:'2026-05-15', month:'2026-05', asset:'VIVA3', segment:'Consumo', strike:26.64, type:'Compra Ativo', qty:200.0, exp:'', premium:0, debit:5328.0, result:0.0, note:'Clearing taxas 25 reais'},
-        {id:ctUid(), date:'2026-05-15', month:'2026-05', asset:'BBDC4', segment:'Financeiro', strike:17.76, type:'Compra Ativo', qty:300.0, exp:'', premium:0, debit:5328.0, result:0.0, note:'Clearing taxas 25 reais'},
-        {id:ctUid(), date:'2026-05-15', month:'2026-05', asset:'VIVAQ266E', segment:'Consumo', strike:23.64, type:'Venda de CALL', qty:-200.0, exp:'2026-06-19', premium:164.0, debit:8.0, result:156.0, note:''},
-        {id:ctUid(), date:'2026-05-22', month:'2026-05', asset:'RADLS176', segment:'Saúde', strike:17.62, type:'Venda de Put', qty:-200.0, exp:'2026-07-17', premium:112.0, debit:0, result:112.0, note:''},
-        {id:ctUid(), date:'2026-06-09', month:'2026-06', asset:'POMOS589', segment:'Bens Industriais', strike:5.89, type:'Venda de PUT', qty:600.0, exp:'2026-07-17', premium:144.0, debit:0, result:144.0, note:''},
-        {id:ctUid(), date:'2026-06-10', month:'2026-06', asset:'AXIAR600 ON', segment:'Energia Elétrica', strike:9.72, type:'Compra de PUT', qty:100.0, exp:'', premium:0, debit:0, result:0, note:''},
-        {id:ctUid(), date:'2026-06-10', month:'2026-06', asset:'BBASG198 ON', segment:'Financeiro', strike:0.55, type:'Venda de call', qty:700.0, exp:'', premium:385.0, debit:0, result:385.0, note:''},
-        {id:ctUid(), date:'2026-06-10', month:'2026-06', asset:'BBDCG175 PN', segment:'Financeiro', strike:0.5, type:'Venda de call', qty:300.0, exp:'', premium:150.0, debit:0, result:150.0, note:''},
-        {id:ctUid(), date:'2026-06-10', month:'2026-06', asset:'DIRRR135 ON', segment:'Construção Civil', strike:1.0, type:'Compra de PUT', qty:700.0, exp:'', premium:700.0, debit:0, result:700.0, note:''},
-        {id:ctUid(), date:'2026-06-10', month:'2026-06', asset:'HYPER227 ON', segment:'Saúde', strike:1.69, type:'Compra de PUT', qty:100.0, exp:'', premium:169.0, debit:0, result:169.0, note:''},
-        {id:ctUid(), date:'2026-06-10', month:'2026-06', asset:'MBRFR167 ON', segment:'Consumo', strike:1.49, type:'Compra de PUT', qty:200.0, exp:'', premium:298.0, debit:0, result:298.0, note:''},
-        {id:ctUid(), date:'2026-06-10', month:'2026-06', asset:'VIVAF236 ON', segment:'Consumo', strike:0.03, type:'Compra de CALL', qty:200.0, exp:'', premium:6.0, debit:0, result:6.0, note:''},
-        {id:ctUid(), date:'2026-06-10', month:'2026-06', asset:'ASAI3 ON', segment:'Consumo', strike:8.27, type:'Venda do Ativo', qty:500.0, exp:'', premium:4135.0, debit:0, result:4135.0, note:''},
-        {id:ctUid(), date:'2026-06-10', month:'2026-06', asset:'SUZB3 ON', segment:'Materiais Básicos', strike:41.4, type:'Venda do Ativo', qty:100.0, exp:'', premium:4140.0, debit:0, result:4140.0, note:''},
-        {id:ctUid(), date:'2026-06-10', month:'2026-06', asset:'SUZB3F ON', segment:'Materiais Básicos', strike:41.39, type:'Venda do Ativo', qty:24.0, exp:'', premium:993.36, debit:0, result:993.36, note:''},
-        {id:ctUid(), date:'2026-06-10', month:'2026-06', asset:'SUZB3F ON', segment:'Materiais Básicos', strike:41.4, type:'Venda do Ativo', qty:1.0, exp:'', premium:41.4, debit:0, result:41.4, note:''},
-        {id:ctUid(), date:'2026-06-10', month:'2026-06', asset:'SUZB3F ON', segment:'Materiais Básicos', strike:41.39, type:'Venda do Ativo', qty:5.0, exp:'', premium:206.95, debit:0, result:206.95, note:''},
-        {id:ctUid(), date:'2026-06-10', month:'2026-06', asset:'VIVA3 ON', segment:'Consumo', strike:20.93, type:'Venda do Ativo', qty:100.0, exp:'', premium:2093.0, debit:0, result:2093.0, note:''},
-        {id:ctUid(), date:'2026-06-10', month:'2026-06', asset:'VIVA3 ON', segment:'Consumo', strike:20.92, type:'Venda do Ativo', qty:100.0, exp:'', premium:2092.0, debit:0, result:2092.0, note:''},
-        {id:ctUid(), date:'2026-06-21', month:'2026-06', asset:'TOTST274', segment:'Tecnologia', strike:27.18, type:'Venda de PUT', qty:100.0, exp:'2026-08-21', premium:160.0, debit:7.0, result:153.0, note:''},
-        {id:ctUid(), date:'2026-06-22', month:'2026-06', asset:'TOTSH307', segment:'Tecnologia', strike:30.43, type:'Venda de CALL', qty:200.0, exp:'2026-08-21', premium:220.0, debit:0, result:220.0, note:''},
-        {id:ctUid(), date:'2026-07-06', month:'2026-07', asset:'B3SA3T150', segment:'Financeiro', strike:14.46, type:'Venda de put', qty:400.0, exp:'2026-08-21', premium:224.0, debit:168.0, result:56.0, note:''},
-        {id:ctUid(), date:'2026-07-08', month:'2026-07', asset:'CYRET208', segment:'Construção Civil', strike:20.87, type:'Venda de put', qty:100.0, exp:'2026-08-21', premium:83.0, debit:66.0, result:17.0, note:''},
-        {id:ctUid(), date:'2026-07-09', month:'2026-07', asset:'DIRRT123', segment:'Construção Civil', strike:12.33, type:'Venda de Put', qty:800.0, exp:'2026-08-21', premium:584.0, debit:0, result:584.0, note:''},
-        {id:ctUid(), date:'2026-07-01', month:'2026-07', asset:'AXIAT555', segment:'Energia Elétrica', strike:55.5, type:'Venda de put', qty:100.0, exp:'2026-08-21', premium:206.0, debit:0, result:206.0, note:''},
-        {id:ctUid(), date:'2026-07-15', month:'2026-07', asset:'BBDCG175 - BBDG186', segment:'Financeiro', strike:17.55, type:'Rolagem de CALL coberta', qty:300.0, exp:'2026-08-21', premium:105.0, debit:0, result:105.0, note:''},
-        {id:ctUid(), date:'2026-07-16', month:'2026-07', asset:'POMOT599', segment:'Bens Industriais', strike:5.99, type:'Rolagem de put', qty:600.0, exp:'2026-08-21', premium:18.0, debit:0, result:18.0, note:''},
-        {id:ctUid(), date:'2026-07-22', month:'2026-07', asset:'PETRI482', segment:'Petroleo', strike:47.11, type:'Venda de Strangle', qty:-300.0, exp:'2026-09-18', premium:330.0, debit:0, result:330.0, note:''},
-        {id:ctUid(), date:'2026-07-22', month:'2026-07', asset:'PETRU383', segment:'Petroleo', strike:37.36, type:'Outros', qty:-300.0, exp:'2026-09-18', premium:0, debit:0, result:0, note:''},
-        {id:ctUid(), date:'2026-07-01', month:'2026-07', asset:'MBRFT158', segment:'Consumo', strike:15.89, type:'Recompra', qty:-200.0, exp:'2026-08-21', premium:210.0, debit:97.0, result:113.0, note:''}
-      ],
-      crypto: [
-        {id:ctUid(), platform:'HyperLiquid', market:'GOOGL', lev:'5x', size:'0.862', value:224.97, entry:348.73, mark:357.09, pnl:5.26, roe:12.0, liq:224.99, margin:'44.99 Cruzada', funding:-1.38, note:''},
-        {id:ctUid(), platform:'HyperLiquid', market:'EWY', lev:'3x', size:'1.128', value:128.73, entry:183.6, mark:183.34, pnl:-0.15, roe:-0.4, liq:126.28, margin:'42.30 Isolada', funding:-0.51, note:''},
-        {id:ctUid(), platform:'HyperLiquid', market:'QCOM', lev:'3x', size:'0.48', value:79.43, entry:191.83, mark:189.11, pnl:-1.14, roe:-4.3, liq:136.33, margin:'25.03 Isolada', funding:-0.71, note:''}
-      ]
+      positions: [],
+      stockOps: [],
+      optionOps: [],
+      crypto: []
     };
   }
 
@@ -14320,6 +14248,32 @@ contextCharts: [
     renderCtAcoes();
     renderCtOpcoes();
     renderCtCripto();
+    try{
+      const empty = !(ctData.positions&&ctData.positions.length) &&
+        !(ctData.stockOps&&ctData.stockOps.length) &&
+        !(ctData.optionOps&&ctData.optionOps.length) &&
+        !(ctData.crypto&&ctData.crypto.length);
+      let ban = document.getElementById('ctEmptyBanner');
+      if(!ban){
+        const host = document.querySelector('#carteiraTraderPage .ct-page-inner');
+        if(host){
+          ban = document.createElement('div');
+          ban.id = 'ctEmptyBanner';
+          ban.className = 'ct-empty-banner';
+          const top = host.querySelector('.ct-top');
+          if(top && top.nextSibling) host.insertBefore(ban, top.nextSibling);
+          else host.insertBefore(ban, host.firstChild);
+        }
+      }
+      if(ban){
+        if(empty){
+          ban.style.display = '';
+          ban.innerHTML = '<b>Carteira vazia</b> — seus dados ficam só neste navegador. Adicione ativos nas abas ou use <b>Carregar</b> com um JSON exportado. Nenhum dado de outro usuário é compartilhado.';
+        } else {
+          ban.style.display = 'none';
+        }
+      }
+    }catch(e){}
   }
 
   function ctGetSavedTab(){
