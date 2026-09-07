@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0B0E11">
 <meta name="mobile-web-app-capable" content="yes">
-<title>MacroTrader 2.0.34 · 07/set/2026</title>
+<title>MacroTrader 2.0.37 · 07/set/2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Archivo:wght@400;500;600;700;800&family=Merriweather:wght@400;700&family=Lora:wght@400;500;600;700&family=PT+Serif:wght@400;700&family=Playfair+Display:wght@500;600;700&family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -94,6 +94,7 @@
   body:has(#indChartsPage.open) .header-global-actions,
   body:has(#mapGlobalPage.open) .header-global-actions,
   body:has(#payoffPage.open) .header-global-actions,
+  body:has(#accountPage.open) .header-global-actions,
   body:has(#carteiraTraderPage.open) .header-global-actions{
     display:none !important;
   }
@@ -2017,6 +2018,129 @@
   .ind-master-chip.pos{border-color:rgba(0,194,168,.4); color:var(--teal); background:rgba(0,194,168,.08);}
   .ind-master-chip.neg{border-color:rgba(225,82,107,.4); color:var(--rose); background:rgba(225,82,107,.08);}
 
+
+  .account-entry-btn{
+    background:linear-gradient(135deg, rgba(156,124,240,.22), rgba(0,194,168,.12));
+    color:var(--text); border:1px solid rgba(156,124,240,.5); border-radius:8px;
+    padding:0 12px; height:34px; min-height:34px; font-family:var(--font-display); font-weight:700; font-size:12px;
+    cursor:pointer; display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+    transition:border-color .15s, filter .15s, transform .15s;
+    flex:0 0 auto;
+  }
+  .account-entry-btn:hover{border-color:var(--violet); filter:brightness(1.08); transform:translateY(-1px);}
+  .update-btns .account-entry-btn{ margin-left:2px; }
+
+  .account-page{
+    display:none; position:fixed; inset:0; z-index:90; background:var(--bg);
+    overflow:auto; padding:20px 16px 40px;
+  }
+  .account-page.open{display:block;}
+  .account-page-inner{max-width:560px; margin:0 auto;}
+  .account-card{
+    border-radius:16px; padding:22px 24px;
+    border:1px solid rgba(156,124,240,.4);
+    background:linear-gradient(165deg, #1e2430 0%, #151a22 45%, #121820 100%);
+    box-shadow:0 12px 36px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06);
+    color:var(--text);
+  }
+  body.light .account-card{
+    background:linear-gradient(165deg, #ffffff 0%, #f4f6f9 55%, #eef1f5 100%);
+    border-color:rgba(108,79,206,.28);
+    color:var(--text);
+  }
+  .account-page{background:var(--bg);}
+  .account-card h2{color:var(--text);}
+  .account-card .account-lead{color:var(--text-dim);}
+  .account-field input{
+    background:var(--bg-elev-2) !important;
+    border:1px solid rgba(156,124,240,.35) !important;
+    color:var(--text) !important;
+  }
+  body.light .account-field input{
+    background:#fff !important;
+    border:1px solid var(--border) !important;
+  }
+  .account-card h2{
+    margin:0 0 6px 0; font-size:20px; font-weight:800; letter-spacing:-.02em;
+  }
+  .account-card .account-lead{
+    font-size:13px; color:var(--text-dim); line-height:1.5; margin:0 0 18px 0;
+  }
+  .account-status{
+    font-family:var(--font-mono); font-size:11px; padding:8px 12px; border-radius:8px;
+    border:1px solid var(--border); margin-bottom:16px; color:var(--text-dim);
+  }
+  .account-status.on{border-color:rgba(0,194,168,.4); color:var(--teal); background:rgba(0,194,168,.08);}
+  .account-status.off{border-color:rgba(240,163,2,.35); color:var(--amber); background:rgba(240,163,2,.08);}
+  .account-field{margin-bottom:12px;}
+  .account-field label{
+    display:block; font-family:var(--font-mono); font-size:10px; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--text-dim); margin-bottom:5px;
+  }
+  .account-field input{
+    width:100%; background:var(--bg); border:1px solid var(--border); color:var(--text);
+    border-radius:8px; padding:10px 12px; font-size:14px; font-family:var(--font-mono);
+  }
+  .account-field input:focus{outline:none; border-color:var(--violet);}
+  .account-actions{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;}
+  .account-btn{
+    border-radius:8px; padding:10px 14px; font-weight:700; font-size:13px; cursor:pointer;
+    border:1px solid var(--border); background:var(--bg-elev); color:var(--text);
+  }
+  .account-btn.primary{background:var(--violet); color:#fff; border-color:transparent;}
+  .account-btn.danger{border-color:rgba(225,82,107,.5); color:var(--rose);}
+  .account-btn:hover{filter:brightness(1.06);}
+  .account-hint{font-size:12px; color:var(--text-dim); line-height:1.45; margin-top:14px;}
+  .account-features{
+    margin-top:18px; display:grid; gap:8px;
+  }
+  .account-feature{
+    font-size:12px; padding:10px 12px; border-radius:10px; border:1px solid var(--border);
+    background:rgba(0,0,0,.15); color:var(--text-dim); line-height:1.4;
+  }
+  .account-feature b{color:var(--text);}
+
+  .ct-lock-overlay{
+    display:none; position:absolute; inset:0; z-index:20;
+    background:rgba(6,8,12,.82); backdrop-filter:blur(8px);
+    align-items:center; justify-content:center; padding:20px;
+  }
+  .ct-lock-overlay.show{display:flex;}
+  .ct-page{position:relative;}
+  .ct-lock-box{
+    width:min(360px, 94vw); border-radius:14px; padding:20px 22px;
+    background:var(--bg-elev); border:1px solid rgba(156,124,240,.35);
+    box-shadow:0 16px 40px rgba(0,0,0,.45);
+  }
+  .ct-lock-box h3{margin:0 0 6px 0; font-size:16px; font-weight:800;}
+  .ct-lock-box p{margin:0 0 14px 0; font-size:12.5px; color:var(--text-dim); line-height:1.45;}
+  .ct-lock-box input{
+    width:100%; background:var(--bg); border:1px solid var(--border); color:var(--text);
+    border-radius:8px; padding:11px 12px; font-size:15px; font-family:var(--font-mono); margin-bottom:10px;
+  }
+  .ct-lock-box .ct-lock-err{color:var(--rose); font-size:12px; min-height:18px; margin-bottom:6px;}
+  .ct-lock-actions{display:flex; gap:8px; flex-wrap:wrap;}
+  .ct-top-lock-btn{
+    margin-left:auto; border:1px solid rgba(225,82,107,.4); color:var(--rose);
+    background:rgba(225,82,107,.1); border-radius:8px; padding:6px 10px; font-size:11px;
+    font-weight:700; cursor:pointer; font-family:var(--font-mono);
+  }
+  .ct-top-lock-btn:hover{background:rgba(225,82,107,.18);}
+  .ct-io-btns .ct-top-lock-btn{
+    margin-left:0; height:auto; align-self:center;
+  }
+  .ct-clear-btn{
+    border-color:rgba(225,82,107,.45) !important;
+    color:var(--rose) !important;
+    background:rgba(225,82,107,.1) !important;
+  }
+  .ct-clear-btn:hover{
+    background:rgba(225,82,107,.2) !important;
+  }
+  .header-global-actions .account-entry-btn{
+    height:34px; margin-left:4px;
+  }
+
   .ct-entry-btn{
     background:linear-gradient(135deg, rgba(0,194,168,.24), rgba(79,163,247,.12));
     color:var(--text); border:1px solid rgba(0,194,168,.45); border-radius:8px;
@@ -3554,6 +3678,7 @@
       <!-- opções preenchidas via JS -->
     </div>
     <button type="button" class="theme-btn" id="themeBtn" title="Alternar tema claro/escuro">☾</button>
+    <button type="button" class="account-entry-btn" id="accountBtn" title="Senha e privacidade">👤 Minha Conta</button>
   </div>
 </div>
 
@@ -3946,7 +4071,45 @@
   </div>
 </div>
 
+
+<div class="account-page" id="accountPage">
+  <div class="account-page-inner">
+    <button type="button" class="sector-back-btn" id="accountBackBtn">← Voltar ao calendário</button>
+    <div class="account-card" style="margin-top:14px">
+      <h2>👤 Minha Conta</h2>
+      <p class="account-lead">Proteja a <b>Carteira Trader</b> com uma senha local. Os dados continuam só neste navegador (não enviamos nada a servidores).</p>
+      <div class="account-status off" id="accountStatus">Status: senha não configurada</div>
+      <div class="account-field">
+        <label for="accountPassNew">Nova senha</label>
+        <input type="password" id="accountPassNew" autocomplete="new-password" placeholder="Mín. 4 caracteres" maxlength="64">
+      </div>
+      <div class="account-field">
+        <label for="accountPassConfirm">Confirmar senha</label>
+        <input type="password" id="accountPassConfirm" autocomplete="new-password" placeholder="Repita a senha" maxlength="64">
+      </div>
+      <div class="account-actions">
+        <button type="button" class="account-btn primary" id="accountCreatePassBtn">🔐 Criar senha</button>
+        <button type="button" class="account-btn" id="accountChangePassBtn" style="display:none">Alterar senha</button>
+        <button type="button" class="account-btn danger" id="accountRemovePassBtn" style="display:none">Remover senha</button>
+      </div>
+      <p class="account-hint" id="accountHint">A senha trava a página <b>Carteira Trader</b>. Use uma senha que só você saiba — não há recuperação na nuvem.</p>
+    </div>
+  </div>
+</div>
+
 <div class="ct-page" id="carteiraTraderPage">
+  <div class="ct-lock-overlay" id="ctLockOverlay" aria-hidden="true">
+    <div class="ct-lock-box">
+      <h3>🔒 Carteira protegida</h3>
+      <p>Digite a senha definida em <b>Minha Conta</b> para ver posições, opções e saldos.</p>
+      <input type="password" id="ctLockInput" placeholder="Senha" autocomplete="current-password" maxlength="64">
+      <div class="ct-lock-err" id="ctLockErr"></div>
+      <div class="ct-lock-actions">
+        <button type="button" class="account-btn primary" id="ctLockSubmit">Desbloquear</button>
+        <button type="button" class="account-btn" id="ctLockToAccount">Minha Conta</button>
+      </div>
+    </div>
+  </div>
   <div class="ct-page-inner">
     <div class="ct-top">
       <button type="button" class="sector-back-btn" id="ctBackBtn">← Voltar ao calendário</button>
@@ -3958,8 +4121,10 @@
         </div>
       </div>
       <div class="ct-io-btns">
+        <button type="button" class="ct-top-lock-btn" id="ctLockNowBtn" title="Bloquear carteira agora">🔒 Bloquear</button>
         <button type="button" class="ct-io-btn" id="ctExportBtn" title="Baixar JSON com toda a carteira">⬇ Exportar</button>
         <button type="button" class="ct-io-btn import" id="ctImportBtn" title="Carregar JSON salvo">⬆ Carregar</button>
+        <button type="button" class="ct-io-btn ct-clear-btn" id="ctClearAllBtn" title="Apaga todos os dados da Carteira Trader neste navegador">🗑 Limpar</button>
         <input type="file" id="ctImportFile" accept="application/json,.json" style="display:none"/>
         <div class="sector-page-badge">MacroTrader · carteira · local</div>
       </div>
@@ -11022,6 +11187,7 @@ contextCharts: [
     if(h === 'payoff'){ openPayoffPage(); return; }
     if(h === 'mapa-global' || h === 'mapa'){ openMapGlobalPage(); return; }
     if(h === 'indicadores'){ openIndChartsPage(); return; }
+    if(h === 'minha-conta'){ openAccountPage(); return; }
     if(h === 'carteira-trader' || h.indexOf('carteira-trader-')===0){ openCarteiraTraderPage(); return; }
     if(document.getElementById('payoffPage').classList.contains('open') && h !== 'payoff') closePayoffPage();
     if(document.getElementById('carteiraTraderPage') && document.getElementById('carteiraTraderPage').classList.contains('open') && h !== 'carteira-trader') closeCarteiraTraderPage();
@@ -14191,11 +14357,193 @@ contextCharts: [
     if(t==='opcoes') renderCtOpcoes();
     if(t==='cripto') renderCtCripto();
   }
+
+  /* —— Minha Conta / senha Carteira Trader (local) —— */
+  const MT_PASS_KEY = 'mt-ct-pass-v1';
+  const MT_SESS_KEY = 'mt-ct-sess-v1';
+  const MT_SESS_MS = 30 * 60 * 1000;
+  let mtPassFails = 0;
+
+  function mtPassLoad(){
+    try{ return JSON.parse(localStorage.getItem(MT_PASS_KEY) || 'null'); }catch(e){ return null; }
+  }
+  function mtPassSave(obj){
+    try{ localStorage.setItem(MT_PASS_KEY, JSON.stringify(obj)); }catch(e){}
+  }
+  function mtPassClear(){
+    try{ localStorage.removeItem(MT_PASS_KEY); }catch(e){}
+    try{ sessionStorage.removeItem(MT_SESS_KEY); }catch(e){}
+  }
+  async function mtHashPass(pass, saltB64){
+    const enc = new TextEncoder();
+    const salt = saltB64
+      ? Uint8Array.from(atob(saltB64), function(c){ return c.charCodeAt(0); })
+      : crypto.getRandomValues(new Uint8Array(16));
+    const material = await crypto.subtle.importKey('raw', enc.encode(pass), 'PBKDF2', false, ['deriveBits']);
+    const bits = await crypto.subtle.deriveBits(
+      {name:'PBKDF2', salt:salt, iterations:120000, hash:'SHA-256'},
+      material,
+      256
+    );
+    const hashArr = new Uint8Array(bits);
+    const b64 = function(buf){
+      let s=''; buf.forEach(function(b){ s += String.fromCharCode(b); });
+      return btoa(s);
+    };
+    return { hash: b64(hashArr), salt: b64(salt) };
+  }
+  function mtSessionOk(){
+    try{
+      const t0 = parseInt(sessionStorage.getItem(MT_SESS_KEY) || '0', 10);
+      if(!t0) return false;
+      if(Date.now() - t0 > MT_SESS_MS){ sessionStorage.removeItem(MT_SESS_KEY); return false; }
+      return true;
+    }catch(e){ return false; }
+  }
+  function mtSessionOpen(){
+    try{ sessionStorage.setItem(MT_SESS_KEY, String(Date.now())); }catch(e){}
+  }
+  function mtSessionClose(){
+    try{ sessionStorage.removeItem(MT_SESS_KEY); }catch(e){}
+  }
+  function mtPassConfigured(){
+    const p = mtPassLoad();
+    return !!(p && p.hash && p.salt);
+  }
+  function refreshAccountUI(){
+    const st = document.getElementById('accountStatus');
+    const createBtn = document.getElementById('accountCreatePassBtn');
+    const changeBtn = document.getElementById('accountChangePassBtn');
+    const removeBtn = document.getElementById('accountRemovePassBtn');
+    const on = mtPassConfigured();
+    if(st){
+      st.textContent = on ? 'Status: senha ativa · Carteira Trader protegida' : 'Status: senha não configurada';
+      st.className = 'account-status ' + (on ? 'on' : 'off');
+    }
+    if(createBtn) createBtn.style.display = on ? 'none' : '';
+    if(changeBtn) changeBtn.style.display = on ? '' : 'none';
+    if(removeBtn) removeBtn.style.display = on ? '' : 'none';
+  }
+  function openAccountPage(){
+    const page = document.getElementById('accountPage');
+    if(page) page.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    refreshAccountUI();
+    try{ history.replaceState(null,'', location.pathname + location.search + '#minha-conta'); }catch(e){}
+  }
+  function closeAccountPage(){
+    const page = document.getElementById('accountPage');
+    if(page) page.classList.remove('open');
+    document.body.style.overflow = '';
+    try{
+      if((location.hash||'').replace('#','')==='minha-conta') history.replaceState(null,'', location.pathname + location.search);
+    }catch(e){}
+  }
+  async function accountCreateOrChangePass(){
+    const a = (document.getElementById('accountPassNew')||{}).value || '';
+    const b = (document.getElementById('accountPassConfirm')||{}).value || '';
+    const hint = document.getElementById('accountHint');
+    if(a.length < 4){
+      if(hint) hint.textContent = 'Use pelo menos 4 caracteres.';
+      return;
+    }
+    if(a !== b){
+      if(hint) hint.textContent = 'As senhas não coincidem. Confira e tente de novo.';
+      return;
+    }
+    try{
+      const {hash, salt} = await mtHashPass(a, null);
+      mtPassSave({ hash:hash, salt:salt, createdAt: new Date().toISOString() });
+      mtSessionClose();
+      if(document.getElementById('accountPassNew')) document.getElementById('accountPassNew').value = '';
+      if(document.getElementById('accountPassConfirm')) document.getElementById('accountPassConfirm').value = '';
+      refreshAccountUI();
+      if(hint) hint.textContent = 'Senha salva neste navegador. Ao abrir a Carteira Trader, será pedida a senha.';
+    }catch(err){
+      if(hint) hint.textContent = 'Não foi possível gravar a senha neste navegador.';
+    }
+  }
+  function accountRemovePass(){
+    if(!confirm('Remover a senha da Carteira Trader neste navegador?')) return;
+    mtPassClear();
+    refreshAccountUI();
+    const hint = document.getElementById('accountHint');
+    if(hint) hint.textContent = 'Senha removida. A carteira fica acessível sem bloqueio neste dispositivo.';
+  }
+  function showCtLock(show){
+    const ov = document.getElementById('ctLockOverlay');
+    if(!ov) return;
+    ov.classList.toggle('show', !!show);
+    ov.setAttribute('aria-hidden', show ? 'false' : 'true');
+    const inner = document.querySelector('#carteiraTraderPage .ct-page-inner');
+    if(inner){
+      inner.style.visibility = show ? 'hidden' : '';
+      inner.style.pointerEvents = show ? 'none' : '';
+    }
+  }
+
+  async function ctClearAllUserData(){
+    const ok = confirm('Limpar TODOS os dados da Carteira Trader neste navegador?\n\nSerão apagados: posições, operações de ações, opções, criptos e dados salvos localmente desta carteira.\n\nEsta ação não pode ser desfeita (exporte antes se precisar).');
+    if(!ok) return;
+    const ok2 = confirm('Confirma definitivamente a exclusão de todos os dados da Carteira Trader?');
+    if(!ok2) return;
+    try{
+      ctData = { positions: [], stockOps: [], optionOps: [], crypto: [] };
+      if(typeof ctSave === 'function') await ctSave();
+      // limpa chaves antigas possíveis
+      try{
+        if(typeof CT_KEY !== 'undefined' && CT_KEY) localStorage.removeItem(CT_KEY);
+        const keys = [];
+        for(let i=0;i<localStorage.length;i++){
+          const k = localStorage.key(i);
+          if(k && (k.indexOf('carteira-trader')===0 || k.indexOf('ct-')===0)) keys.push(k);
+        }
+        keys.forEach(function(k){ localStorage.removeItem(k); });
+      }catch(e){}
+      try{ sessionStorage.removeItem('macro-carteira-trader'); }catch(e){}
+      if(typeof renderCarteiraTrader === 'function') renderCarteiraTrader();
+      alert('Carteira Trader limpa neste navegador.');
+    }catch(err){
+      alert('Falha ao limpar: '+(err&&err.message?err.message:err));
+    }
+  }
+
+  async function ctTryUnlock(){
+    const err = document.getElementById('ctLockErr');
+    const input = document.getElementById('ctLockInput');
+    const pass = (input && input.value) || '';
+    if(mtPassFails >= 5){
+      if(err) err.textContent = 'Muitas tentativas. Aguarde 20 segundos.';
+      return;
+    }
+    const stored = mtPassLoad();
+    if(!stored){ showCtLock(false); return; }
+    try{
+      const {hash} = await mtHashPass(pass, stored.salt);
+      if(hash === stored.hash){
+        mtPassFails = 0;
+        mtSessionOpen();
+        if(input) input.value = '';
+        if(err) err.textContent = '';
+        showCtLock(false);
+        return;
+      }
+    }catch(e){}
+    mtPassFails++;
+    if(err) err.textContent = 'Senha incorreta ('+mtPassFails+'/5).';
+    if(mtPassFails >= 5){
+      if(err) err.textContent = 'Bloqueado por 20s após 5 erros.';
+      setTimeout(function(){ mtPassFails = 0; if(err) err.textContent = ''; }, 20000);
+    }
+  }
+
   function openCarteiraTraderPage(){
     const page = document.getElementById('carteiraTraderPage');
     if(page) page.classList.add('open');
     document.body.style.overflow = 'hidden';
     try{ sessionStorage.setItem('macro-carteira-trader','1'); }catch(e){}
+    const needLock = mtPassConfigured() && !mtSessionOk();
+    showCtLock(needLock);
     const tab = ctGetSavedTab();
     ctLoad().then(function(){
       renderCarteiraTrader();
@@ -14943,6 +15291,32 @@ contextCharts: [
   document.getElementById('indChartsBtn').addEventListener('click', function(){ openIndChartsPage(); });
   document.getElementById('carteiraTraderBtn').addEventListener('click', function(){ openCarteiraTraderPage(); });
   document.getElementById('ctBackBtn').addEventListener('click', function(){ closeCarteiraTraderPage(); });
+  (function(){
+    const ab = document.getElementById('accountBtn');
+    if(ab) ab.addEventListener('click', openAccountPage);
+    const abb = document.getElementById('accountBackBtn');
+    if(abb) abb.addEventListener('click', closeAccountPage);
+    const create = document.getElementById('accountCreatePassBtn');
+    if(create) create.addEventListener('click', accountCreateOrChangePass);
+    const change = document.getElementById('accountChangePassBtn');
+    if(change) change.addEventListener('click', accountCreateOrChangePass);
+    const rem = document.getElementById('accountRemovePassBtn');
+    if(rem) rem.addEventListener('click', accountRemovePass);
+    const lockSub = document.getElementById('ctLockSubmit');
+    if(lockSub) lockSub.addEventListener('click', ctTryUnlock);
+    const lockIn = document.getElementById('ctLockInput');
+    if(lockIn) lockIn.addEventListener('keydown', function(ev){ if(ev.key==='Enter') ctTryUnlock(); });
+    const toAcc = document.getElementById('ctLockToAccount');
+    if(toAcc) toAcc.addEventListener('click', function(){ closeCarteiraTraderPage(); openAccountPage(); });
+    const lockNow = document.getElementById('ctLockNowBtn');
+    if(lockNow) lockNow.addEventListener('click', function(){
+      mtSessionClose();
+      if(mtPassConfigured()) showCtLock(true);
+      else alert('Crie uma senha em Minha Conta para poder bloquear a carteira.');
+    });
+    const clearAll = document.getElementById('ctClearAllBtn');
+    if(clearAll) clearAll.addEventListener('click', function(){ ctClearAllUserData(); });
+  })();
   document.getElementById('ctExportBtn').addEventListener('click', function(){
     try{
       const payload = {
@@ -15067,6 +15441,7 @@ contextCharts: [
   if((location.hash||'').replace('#','')==='payoff' || (function(){try{return sessionStorage.getItem('macro-payoff');}catch(e){return null;}})()){ openPayoffPage(); }
   if((location.hash||'').replace('#','')==='mapa-global' || (location.hash||'').replace('#','')==='mapa' || (function(){try{return sessionStorage.getItem('macro-map-global');}catch(e){return null;}})()){ openMapGlobalPage(); }
   if((location.hash||'').replace('#','')==='indicadores' || (function(){try{return sessionStorage.getItem('macro-ind-charts');}catch(e){return null;}})()){ openIndChartsPage(); }
+  if((location.hash||'').replace('#','')==='minha-conta'){ openAccountPage(); }
   if((function(){ const h=(location.hash||'').replace(/^#/,''); return h==='carteira-trader' || h.indexOf('carteira-trader-')===0 || (function(){try{return sessionStorage.getItem('macro-carteira-trader');}catch(e){return null;}})(); })()){ openCarteiraTraderPage(); }
     // Restaura a página de setor após F5 / recarregar (hash ou sessionStorage)
   restoreSectorPage();
