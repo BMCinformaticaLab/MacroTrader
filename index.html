@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0B0E11">
 <meta name="mobile-web-app-capable" content="yes">
-<title>MacroTrader 2.0.39 · 07/set/2026</title>
+<title>MacroTrader 2.0.47 · 07/set/2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Archivo:wght@400;500;600;700;800&family=Merriweather:wght@400;700&family=Lora:wght@400;500;600;700&family=PT+Serif:wght@400;700&family=Playfair+Display:wght@500;600;700&family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -2165,9 +2165,158 @@
   }
   .ct-page.open{display:block;}
   .ct-page-inner{width:100%; max-width:100%; margin:0; padding:18px 24px 48px; box-sizing:border-box;}
-  .ct-resumo-grid{
-    display:grid; grid-template-columns:minmax(0,1fr) 280px; gap:16px; align-items:start; overflow:visible;
+
+  .ct-portfolio-wrap{
+    display:none;
+    margin:0 0 16px 0;
+    width:100%;
   }
+  .ct-portfolio-wrap.show{display:block;}
+  /* Card Minha Carteira — visual refinado */
+  #ctPortfolioWrap .portfolio-panel{
+    position:relative;
+    width:100%; max-width:100%; box-sizing:border-box;
+    margin:0; padding:16px 18px 18px;
+    border-radius:18px;
+    border:1px solid rgba(156,124,240,.28);
+    background:
+      radial-gradient(1200px 180px at 0% 0%, rgba(156,124,240,.14), transparent 55%),
+      radial-gradient(900px 160px at 100% 0%, rgba(0,194,168,.10), transparent 50%),
+      linear-gradient(165deg, rgba(255,255,255,.05), rgba(0,0,0,.16));
+    box-shadow:
+      0 10px 28px rgba(0,0,0,.18),
+      inset 0 1px 0 rgba(255,255,255,.06);
+    display:flex; flex-direction:column; gap:12px;
+    overflow:hidden;
+  }
+  #ctPortfolioWrap .portfolio-panel::before{
+    content:''; position:absolute; left:0; right:0; top:0; height:2px;
+    background:linear-gradient(90deg, transparent, rgba(156,124,240,.7), rgba(0,194,168,.55), transparent);
+    opacity:.9; pointer-events:none;
+  }
+  body.light #ctPortfolioWrap .portfolio-panel{
+    background:
+      radial-gradient(1000px 160px at 0% 0%, rgba(156,124,240,.08), transparent 55%),
+      linear-gradient(165deg, #ffffff, #f4f6fa);
+    border-color:rgba(108,79,206,.2);
+    box-shadow:0 8px 24px rgba(27,37,48,.08), inset 0 1px 0 rgba(255,255,255,.9);
+  }
+  #ctPortfolioWrap .portfolio-panel h3{
+    font-family:var(--font-display);
+    font-size:14px; font-weight:800; letter-spacing:-.02em;
+    text-transform:none; color:var(--text);
+    border-bottom:1px solid rgba(255,255,255,.06);
+    padding-bottom:10px; margin:0;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  body.light #ctPortfolioWrap .portfolio-panel h3{border-bottom-color:var(--border);}
+  #ctPortfolioWrap .portfolio-h3-actions{display:flex; align-items:center; gap:6px;}
+  #ctPortfolioWrap .portfolio-export-btn,
+  #ctPortfolioWrap .portfolio-add-btn{
+    border-radius:8px !important;
+    padding:6px 11px !important;
+    font-size:11.5px !important;
+    font-weight:700 !important;
+    letter-spacing:.01em;
+    transition:filter .15s, transform .15s, box-shadow .15s;
+  }
+  #ctPortfolioWrap .portfolio-export-btn:hover,
+  #ctPortfolioWrap .portfolio-add-btn:hover{
+    transform:translateY(-1px);
+    filter:brightness(1.06);
+  }
+  #ctPortfolioWrap .update-date-badge,
+  #ctPortfolioWrap #portfolioSyncBadge{display:none !important;}
+  #ctPortfolioWrap .portfolio-list{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(152px, 1fr));
+    gap:10px;
+    max-height:none; overflow:visible;
+  }
+  #ctPortfolioWrap .portfolio-item{
+    position:relative;
+    display:flex; flex-direction:column; align-items:stretch;
+    gap:8px; padding:12px 12px 10px;
+    border-radius:14px;
+    background:linear-gradient(160deg, rgba(255,255,255,.06), rgba(0,0,0,.22));
+    border:1px solid rgba(255,255,255,.08);
+    cursor:pointer;
+    transition:border-color .18s, transform .18s, box-shadow .18s, background .18s;
+    box-shadow:0 2px 8px rgba(0,0,0,.12);
+    overflow:hidden;
+  }
+  #ctPortfolioWrap .portfolio-item::before{
+    content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+    background:linear-gradient(180deg, var(--teal), var(--violet));
+    opacity:.85;
+  }
+  body.light #ctPortfolioWrap .portfolio-item{
+    background:linear-gradient(160deg, #fff, #f6f8fb);
+    border-color:rgba(27,37,48,.08);
+    box-shadow:0 2px 8px rgba(27,37,48,.05);
+  }
+  #ctPortfolioWrap .portfolio-item:hover{
+    border-color:rgba(0,194,168,.45);
+    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(0,0,0,.2);
+  }
+  body.light #ctPortfolioWrap .portfolio-item:hover{
+    box-shadow:0 8px 18px rgba(27,37,48,.1);
+  }
+  #ctPortfolioWrap .portfolio-item-main{
+    display:flex; flex-direction:column; gap:6px; min-width:0; padding-left:4px;
+  }
+  #ctPortfolioWrap .portfolio-item-ticker{
+    font-family:var(--font-mono); font-weight:800; font-size:14px;
+    letter-spacing:.03em; color:var(--text);
+    line-height:1.15;
+  }
+  #ctPortfolioWrap .portfolio-item-meta{
+    display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;
+  }
+  #ctPortfolioWrap .portfolio-qty-pill{
+    font-family:var(--font-mono); font-weight:800; font-size:12px;
+    padding:4px 9px; border-radius:999px;
+    background:linear-gradient(135deg, rgba(0,194,168,.22), rgba(0,194,168,.1));
+    color:var(--teal);
+    border:1px solid rgba(0,194,168,.4);
+    box-shadow:0 0 0 1px rgba(0,194,168,.08);
+  }
+  #ctPortfolioWrap .portfolio-type-badge{
+    font-size:10px !important; font-weight:700 !important;
+    padding:3px 7px !important; border-radius:6px !important;
+  }
+  #ctPortfolioWrap .portfolio-item-del{
+    position:absolute; top:8px; right:8px;
+    width:22px; height:22px; border-radius:6px;
+    display:grid; place-items:center;
+    opacity:0; font-size:11px;
+    background:rgba(225,82,107,.12); color:var(--rose);
+    border:1px solid rgba(225,82,107,.25);
+    transition:opacity .15s, background .15s;
+  }
+  #ctPortfolioWrap .portfolio-item:hover .portfolio-item-del{opacity:1;}
+  #ctPortfolioWrap .portfolio-item-del:hover{background:rgba(225,82,107,.22);}
+  #ctPortfolioWrap .portfolio-empty{
+    grid-column:1 / -1; text-align:center; padding:18px 12px;
+    border-radius:12px; border:1px dashed rgba(156,124,240,.28);
+    background:rgba(156,124,240,.05);
+    color:var(--text-dim); font-size:12.5px;
+  }
+  #ctPortfolioWrap .portfolio-form{
+    margin-top:2px; padding:12px; border-radius:12px;
+    border:1px solid rgba(156,124,240,.22);
+    background:rgba(0,0,0,.16);
+  }
+  body.light #ctPortfolioWrap .portfolio-form{background:rgba(0,0,0,.03);}
+
+
+  .ct-resumo-grid{
+    display:grid; grid-template-columns:minmax(0,1fr) minmax(260px,280px); gap:16px; align-items:stretch; overflow:visible; width:100%;
+  }
+  #ctPanelResumo.active{ display:block; width:100%; }
+  .ct-resumo-main, .ct-calc-side{ min-width:0; }
+
   @media (max-width:960px){
     .ct-resumo-grid{grid-template-columns:1fr;}
   }
@@ -3611,6 +3760,57 @@
   .cal-root.light .updated-at{
     color:#1a365d !important;
   }
+
+/* Calculadora de renda fixa — componentes integrados ao tema */
+.ct-rf{border-top:3px solid var(--teal)}
+.ct-rf-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:18px;flex-wrap:wrap}
+.ct-rf-head h3{margin:0}.ct-rf-tag{font:12px var(--font-mono);color:var(--teal);background:rgba(0,194,168,.1);padding:6px 10px;border-radius:20px}
+.ct-rf-layout{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px}
+.ct-rf-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.ct-rf-fields label{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--text-dim)}
+.ct-rf-fields input,.ct-rf-fields select{width:100%;min-width:0;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--bg-elev);color:var(--text);font:14px var(--font-display)}
+.ct-rf-fields input:focus,.ct-rf-fields select:focus{outline:2px solid var(--teal);outline-offset:1px}
+.ct-rf-result{background:var(--bg-elev-2);border:1px solid var(--border);border-radius:12px;padding:18px;align-self:start}
+.ct-rf-total{font:700 clamp(22px,2.4vw,32px) var(--font-mono);color:var(--teal);margin:8px 0 18px;overflow-wrap:anywhere}
+.ct-rf-metrics{display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:13px}.ct-rf-metrics strong{display:block;color:var(--text);font:600 14px var(--font-mono);margin-top:4px}
+.ct-rf-note{font-size:12px;line-height:1.6;color:var(--text-dim);margin-top:14px}.ct-rf-note a{color:var(--teal)}
+.ct-rf-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.ct-rf-status{font-size:13px;margin-top:10px;color:var(--teal)}
+.ct-rf-saved{margin-top:20px;border-top:1px solid var(--border);padding-top:16px}.ct-rf-saved-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;flex-wrap:wrap}.ct-rf-saved-row small{display:block;color:var(--text-dim);margin-top:4px}.ct-rf-card{border-left:3px solid var(--teal)}.ct-rf-card .portfolio-item-ticker{overflow-wrap:anywhere}.ct-rf-card-value{font:600 14px var(--font-mono);color:var(--teal);margin-top:8px}.ct-rf-card small{display:block;color:var(--text-dim);font-size:12px;margin-top:5px}
+@media(max-width:850px){.ct-rf-layout{grid-template-columns:1fr}}@media(max-width:430px){.ct-rf-fields{grid-template-columns:1fr}}
+
+
+.portfolio-details{margin-top:12px;display:grid;gap:6px;font-size:13px;color:var(--text-dim);line-height:1.45;overflow-wrap:anywhere}.portfolio-details strong{color:var(--text);font-size:14px}.portfolio-details .portfolio-thesis{margin:3px 0 0;border-top:1px solid var(--border);padding-top:8px}.portfolio-details .portfolio-pm{font-family:var(--font-mono);color:var(--teal)}
+.portfolio-extra-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}.portfolio-extra-fields label{display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--text-dim)}.portfolio-extra-fields input,.portfolio-extra-fields select,.portfolio-extra-fields textarea{min-width:0;width:100%;border:1px solid var(--border);background:var(--bg-elev);color:var(--text);border-radius:7px;padding:9px;font:14px var(--font-display)}.portfolio-extra-fields .wide{grid-column:1/-1}.portfolio-extra-fields textarea{resize:vertical;min-height:70px}
+.mt-maturities{background:var(--bg-elev);border:1px solid var(--border);border-top:2px solid var(--teal);border-radius:12px;padding:16px;margin-top:14px}.mt-maturities h3{margin:0;font-size:16px;display:flex;align-items:center;justify-content:space-between;gap:8px}.mt-maturities p{color:var(--text-dim);font-size:12px;line-height:1.5;margin:8px 0}.mt-maturity-list{max-height:290px;overflow:auto}.mt-maturity-row{width:100%;display:flex;justify-content:space-between;align-items:center;text-align:left;gap:12px;background:transparent;border:0;border-bottom:1px solid var(--border);padding:12px 2px;color:var(--text);font:14px var(--font-display);cursor:pointer}.mt-maturity-row:hover{background:var(--bg-elev-2)}.mt-maturity-row:focus-visible{outline:2px solid var(--teal);outline-offset:-2px}.mt-maturity-row small{display:block;color:var(--text-dim);font-size:12px;margin-top:5px}.mt-maturity-time{white-space:nowrap;font:12px var(--font-mono);border-radius:6px;padding:6px 8px;color:var(--teal);background:rgba(0,194,168,.1)}.mt-maturity-time.soon{color:var(--amber);background:rgba(240,163,2,.1)}
+@media(max-width:430px){.portfolio-extra-fields{grid-template-columns:1fr}}
+
+
+/* Carteira compacta na coluna das calculadoras */
+.ct-calc-side #ctPortfolioWrap{margin:0 0 14px;width:100%;min-width:0}
+.ct-calc-side #ctPortfolioWrap .portfolio-panel{padding:12px;border-radius:12px;gap:10px;border-color:var(--border);box-shadow:none}
+.ct-calc-side #ctPortfolioWrap .portfolio-panel h3{font-size:14px;flex-wrap:wrap;padding-bottom:8px;gap:8px}
+.ct-calc-side #ctPortfolioWrap .portfolio-h3-actions{width:100%;justify-content:flex-end}
+.ct-calc-side #ctPortfolioWrap .portfolio-list{grid-template-columns:minmax(0,1fr);max-height:300px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:var(--teal) var(--bg-elev-2);padding:2px 5px 2px 0;gap:8px}
+.ct-calc-side #ctPortfolioWrap .portfolio-list::-webkit-scrollbar{width:6px}
+.ct-calc-side #ctPortfolioWrap .portfolio-list::-webkit-scrollbar-thumb{background:var(--teal);border-radius:8px}
+.ct-calc-side #ctPortfolioWrap .portfolio-item{padding:9px 10px;border-radius:8px;gap:5px;box-shadow:none}
+.ct-calc-side #ctPortfolioWrap .portfolio-item:hover{transform:none}
+.ct-calc-side #ctPortfolioWrap .portfolio-item-main{padding-left:2px;gap:5px}
+.ct-calc-side #ctPortfolioWrap .portfolio-item-ticker{font-size:14px;padding-right:24px}
+.ct-calc-side #ctPortfolioWrap .portfolio-details{margin-top:0;gap:3px;font-size:12px;line-height:1.4}
+.ct-calc-side #ctPortfolioWrap .portfolio-details strong{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ct-calc-side #ctPortfolioWrap .portfolio-thesis{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;padding-top:5px;margin-top:2px}
+.ct-calc-side #ctPortfolioWrap .portfolio-item-del{opacity:1;top:6px;right:6px}
+.ct-calc-side #ctPortfolioWrap .portfolio-qty-pill{padding:2px 7px;font-size:12px}
+.ct-calc-side #ctPortfolioWrap .ct-rf-card-value{font-size:14px;margin-top:2px}
+.ct-calc-side #ctPortfolioWrap .ct-rf-card small{margin-top:2px;line-height:1.4}
+.ct-calc-side #ctPortfolioWrap .ct-rf-card .ct-btn{padding:5px 8px;font-size:12px}
+.ct-calc-side #ctPortfolioWrap .portfolio-extra-fields{grid-template-columns:minmax(0,1fr)}
+.ct-calc-side #ctPortfolioWrap .portfolio-form{padding:8px;max-height:390px;overflow-y:auto;scrollbar-width:thin}
+.ct-calc-side #ctPortfolioWrap .portfolio-form-row{flex-wrap:wrap}
+.ct-calc-side #ctPortfolioWrap .portfolio-form-row>*{min-width:0;width:100%}
+.ct-calc-side #ctPortfolioWrap .portfolio-empty{padding:12px 8px}
+
 </style>
 </head>
 <body class="light">
@@ -3796,34 +3996,7 @@
     <div class="notepad-hint">Ícones: 📄+ nova · 🗑 excluir · 💾 backup · 📂 restaurar. As notas somem se limpar o cache do navegador — use 💾 para salvar no computador. Selecione texto para negrito, itálico, sublinhado ou cor.</div>
   </div>
 
-  <div class="portfolio-panel" id="portfolioPanel">
-    <h3>💼 Minha Carteira
-      <span class="portfolio-h3-actions">
-        <button type="button" class="portfolio-export-btn" id="portfolioExportBtn" title="Copia os tickers para colar no chat e pedir atualização do calendário">Exportar</button>
-        <button type="button" class="portfolio-add-btn" id="portfolioAddBtn">+ Ativo</button>
-      </span>
-    </h3>
-    <div class="update-date-badge">Atualizado em: 04/set/2026</div>
-    <div id="portfolioSyncBadge" style="font-family:var(--font-mono);font-size:10px;color:var(--teal);margin:-4px 0 8px 0;letter-spacing:.04em;" title="Eventos do calendário ligados à carteira">Sincronizando…</div>
-    <div class="portfolio-list" id="portfolioList"></div>
-    <div class="portfolio-form portfolio-hidden" id="portfolioForm">
-      <input type="text" id="portfolioAsset" placeholder="Ativo (ex: PETR4)" maxlength="30">
-      <div class="portfolio-form-row">
-        <input type="number" id="portfolioQty" placeholder="Quantidade" min="0" step="any">
-        <select id="portfolioType">
-          <option value="acao">Ação</option>
-          <option value="opcoes">Opções</option>
-          <option value="derivativos">Derivativos</option>
-          <option value="criptos">Criptos</option>
-          <option value="renda_fixa">Renda Fixa</option>
-        </select>
-      </div>
-      <div class="portfolio-form-actions">
-        <button type="button" class="portfolio-form-cancel" id="portfolioCancelBtn">Cancelar</button>
-        <button type="button" class="portfolio-form-save" id="portfolioSaveBtn">Salvar</button>
-      </div>
-    </div>
-  </div>
+  
 
   <!-- Wall Street · recomendações Brasil -->
   <div class="ws-recs" id="wsRecsPanel" title="Recomendações recentes de grandes bancos americanos para o Brasil">
@@ -3883,6 +4056,7 @@
   </div>
 
 
+<section class="mt-maturities" id="mtMaturitiesPanel" aria-labelledby="mtMaturitiesTitle"><h3 id="mtMaturitiesTitle">📅 Próximos vencimentos <span class="ct-rf-tag" id="mtMaturitiesCount">0</span></h3><p>Opções e renda fixa · datas dos seus cadastros</p><div class="mt-maturity-list" id="mtMaturitiesList"><p>Carregando vencimentos…</p></div></section>
 </div>
 
 
@@ -4143,7 +4317,45 @@
       <button type="button" class="ct-tab" data-ct="opcoes">Opções</button>
       <button type="button" class="ct-tab" data-ct="cripto">Criptos e tokens</button>
     </div>
-    <div class="ct-panel active" id="ctPanelResumo"></div>
+<div class="ct-panel active" id="ctPanelResumo">
+        <div class="ct-portfolio-wrap show" id="ctPortfolioWrap">
+    <div class="portfolio-panel" id="portfolioPanel">
+    <h3>💼 Minha Carteira
+      <span class="portfolio-h3-actions">
+        <button type="button" class="portfolio-export-btn" id="portfolioExportBtn" title="Copia os tickers para colar no chat e pedir atualização do calendário">Exportar</button>
+        <button type="button" class="portfolio-add-btn" id="portfolioAddBtn">+ Ativo</button>
+      </span>
+    </h3>
+    <div class="update-date-badge">Atualizado em: 04/set/2026</div>
+    <div id="portfolioSyncBadge" style="font-family:var(--font-mono);font-size:10px;color:var(--teal);margin:-4px 0 8px 0;letter-spacing:.04em;" title="Eventos do calendário ligados à carteira">Sincronizando…</div>
+    <div class="portfolio-list" id="portfolioList" tabindex="0" role="region" aria-label="Ativos da minha carteira, lista com rolagem"></div>
+    <div class="portfolio-form portfolio-hidden" id="portfolioForm">
+      <input type="text" id="portfolioAsset" placeholder="Ativo (ex: PETR4)" maxlength="30">
+      <div class="portfolio-form-row">
+        <input type="number" id="portfolioQty" placeholder="Quantidade" min="0" step="any">
+        <select id="portfolioType">
+          <option value="acao">Ação</option>
+          <option value="opcoes">Opções</option>
+          <option value="derivativos">Derivativos</option>
+          <option value="criptos">Criptos</option>
+          <option value="renda_fixa">Renda Fixa</option>
+        </select>
+      </div>
+      <div class="portfolio-extra-fields">
+        <label>Nome da empresa ou fundo<input id="portfolioName" maxlength="100" placeholder="Ex.: Petrobras"></label>
+        <label>Setor<input id="portfolioSector" maxlength="80" placeholder="Ex.: Petróleo e gás"></label>
+        <label>Preço médio<input id="portfolioAvg" type="number" min="0" step="any" placeholder="Seu preço de aquisição"></label>
+        <label>Moeda<select id="portfolioCurrency"><option value="BRL">Real (R$)</option><option value="USD">Dólar (US$)</option></select></label>
+        <label class="wide">Minha tese<textarea id="portfolioThesis" maxlength="240" placeholder="Por que mantenho este ativo na carteira?"></textarea></label>
+      </div>
+      <div class="portfolio-form-actions">
+        <button type="button" class="portfolio-form-cancel" id="portfolioCancelBtn">Cancelar</button>
+        <button type="button" class="portfolio-form-save" id="portfolioSaveBtn">Salvar</button>
+      </div>
+    </div>
+  </div>
+    </div>
+</div>
     <div class="ct-panel" id="ctPanelAcoes"></div>
     <div class="ct-panel" id="ctPanelOpcoes"></div>
     <div class="ct-panel" id="ctPanelCripto"></div>
@@ -5294,30 +5506,30 @@
   // Termômetro = visão MACRO GLOBAL (commodities, política, Brasil e mundo).
   // NÃO deve se restringir aos tickers da Minha Carteira.
   const SECTOR_DATA = [
-    {icon:'🌎', name:'Juros & Bancos centrais', score:5,
-      rationale:'NFP ago +162 mil reforça economia EUA; odds de alta Fed set. ~58–61%. FOMC 15–16/set. Selic 14%; Copom na mesma janela. Focus: Selic fim/26 13,75% · IPCA ~5,01%. Ibovespa ~185–186 mil pós-série de 11 altas. Dólar ~R$ 5,12. Juros reais ainda altos.'},
-    {icon:'🛢️', name:'Petróleo & energia', score:42,
-      rationale:'Brent ~US$ 95–96 · WTI ~US$ 91 (prêmio geopolítico Irã). PETR4 ~R$ 41,6 na realização pós-rali. Super-semana Copom/FOMC 15–16/set dita o próximo leg de energia e duration.'},
-    {icon:'🥇', name:'Metais & mineração', score:10,
-      rationale:'Minério e metais industriais seguem a demanda da China e o dólar. Ouro reage a juros reais e a risco geopolítico. Siderurgia sensível a spreads e capacidade. Leitura global de PMI e importações chinesas pesa mais que nomes locais isolados.'},
-    {icon:'🌾', name:'Agronegócio & alimentos', score:35,
-      rationale:'Exportações brasileiras fortes no 1º semestre; clima (El Niño), frete/diesel e demanda chinesa definem preços. Plano Safra em contratação com Selic ainda alta. Choques de alimentos alimentam IPCA e inflação global de commodities.'},
-    {icon:'🏦', name:'Bancos & crédito', score:18,
-      rationale:'Selic 14%; Copom 15–16/set. Bancos e DI reagem ao mix eleitoral + NFP forte nos EUA. BBDC4 no radar de NIM/NPL; corte da Selic ainda precificado no Focus (13,75% fim/26).'},
-    {icon:'🏗️', name:'Imobiliário & construção', score:-25,
-      rationale:'Selic ainda alta e pausa longa prevista por casas de research pesam no múltiplo. DIRR3 reportou 2T26 (11/ago). Cortes limitados até 2T27 reduzem o vento de reprecificação. Nos EUA, mortgage rates seguem o termômetro.'},
-    {icon:'🛍️', name:'Consumo & varejo', score:-22,
-      rationale:'Renda real, emprego e endividamento das famílias. Juros altos freiam o discricionário; itens essenciais e valor resistem melhor. Dados de varejo EUA/BR e confiança do consumidor são o termômetro.'},
-    {icon:'💻', name:'Tecnologia & crescimento', score:22,
-      rationale:'Big techs e semicondutores reagem a juros EUA e Capex de IA. Múltiplos de growth doméstico sofrem com Selic restritiva. Fluxo global para Nasdaq/chips e valuation vs. treasuries importam mais que nomes isolados.'},
-    {icon:'₿', name:'Cripto & ativos digitais', score:12,
-      rationale:'Sensíveis a liquidez global e ao tom do Fed. BTC/ETH oscillam com NFP/CPI; ETFs e fluxos institucionais. Não substitui o diagnóstico macro — amplifica o apetite por risco.'},
-    {icon:'🏛️', name:'RWA / tokenização', score:42,
-      rationale:'Adoção institucional (fundos tokenizados, tesouros on-chain, stablecoin reserves). Narrativa estrutural de tokenização de ativos reais, com liquidez de trading ainda seletiva. Tema macro de infraestrutura financeira, não de carteira pessoal.'},
-    {icon:'⚡', name:'Utilities & infra', score:48,
-      rationale:'Perfil defensivo em ambiente de juros altos: contratos longos, demanda estável, yield relativo. Regulamentação e hidrologia/energia no Brasil; treasuries e spreads de crédito no exterior.'},
-    {icon:'✈️', name:'Transporte & turismo', score:0,
-      rationale:'Combustível (querosene/petróleo), câmbio e renda real. Demanda de viagens compete com juros altos. Setor global de companhias aéreas e turismo sensível a choques de oferta energética.'}
+    {icon:'🌎', name:'Juros & Bancos centrais', score:-5,
+      rationale:'Brasil: Selic em 14,00% a.a. após o corte de agosto; o Copom segue cauteloso porque as expectativas de inflação continuam acima da meta. EUA: Fed em 3,50%–3,75%; payroll de agosto veio forte (+162 mil), mantendo o mercado dividido entre manutenção e nova alta. Juros ainda são o principal filtro para bolsa, crédito e câmbio.'},
+    {icon:'🛢️', name:'Petróleo & energia', score:50,
+      rationale:'Brent perto de US$ 97 e WTI perto de US$ 93 em 7/set, com prêmio geopolítico elevado. Estoques comerciais de petróleo dos EUA recuaram para 424,5 milhões de barris em 28/ago. No Brasil, a produção de petróleo atingiu 4,498 milhões bbl/d em julho. Viés positivo, mas com volatilidade alta.'},
+    {icon:'🥇', name:'Metais & mineração', score:22,
+      rationale:'Minério de ferro de 62% voltou para a região de US$ 101/t no início de setembro, enquanto o ouro está perto de US$ 4,41 mil/oz. Minério depende sobretudo de China, aço e estoques; ouro recebe suporte do risco geopolítico, mas juros reais elevados limitam parte do movimento.'},
+    {icon:'🌾', name:'Agronegócio & alimentos', score:18,
+      rationale:'O agro brasileiro segue apoiado por safra, exportações e câmbio, mas margens são muito diferentes entre grãos, proteína e insumos. Diesel/frete mais caros e clima seguem no radar. Para inflação, alimentos continuam relevantes porque choques de oferta chegam rapidamente ao IPCA.'},
+    {icon:'🏦', name:'Bancos & crédito', score:12,
+      rationale:'Selic de 14% ainda sustenta receitas financeiras, mas desaceleração do crédito e inadimplência exigem seleção. Bancos grandes tendem a atravessar melhor esse ambiente; nos EUA, a curva de juros, custo dos depósitos e qualidade do crédito seguem como principais drivers.'},
+    {icon:'🏗️', name:'Imobiliário & construção', score:-35,
+      rationale:'É um dos blocos mais sensíveis aos juros. Selic em 14% mantém financiamento caro e pressiona valuation de incorporadoras; nos EUA, Treasury de 10 anos perto de 4,8% mantém hipotecas caras. Melhoras dependem de queda consistente dos juros longos, não apenas de um corte isolado.'},
+    {icon:'🛍️', name:'Consumo & varejo', score:-25,
+      rationale:'Juros altos e crédito caro continuam limitando o consumo discricionário no Brasil. Nos EUA, emprego ainda forte ajuda a renda, mas inflação e juros elevados apertam o orçamento. Empresas de itens essenciais e com menor alavancagem tendem a ter comportamento mais defensivo.'},
+    {icon:'💻', name:'Tecnologia & crescimento', score:15,
+      rationale:'IA, semicondutores e data centers seguem com demanda estrutural forte, confirmada por PMIs americanos ainda expansionistas. O contraponto é o custo de capital: Treasury de 10 anos perto de 4,8% reduz o valor presente de lucros futuros e aumenta a sensibilidade dos múltiplos.'},
+    {icon:'₿', name:'Cripto & ativos digitais', score:-5,
+      rationale:'BTC perto de US$ 79,3 mil e ETH perto de US$ 2,50 mil em 7/set. O bloco continua altamente sensível a liquidez, yields e dólar. Emprego americano forte e expectativa de Fed mais restritivo reduzem o suporte macro, enquanto fluxos institucionais podem amortecer quedas.'},
+    {icon:'🏛️', name:'RWA / tokenização', score:30,
+      rationale:'Tokenização de títulos, fundos e instrumentos de caixa segue como tendência estrutural, com adoção institucional maior do que em ciclos anteriores. O tema é mais infraestrutura financeira do que beta cripto: taxas, custódia, regulação e qualidade do ativo subjacente importam mais que a narrativa.'},
+    {icon:'⚡', name:'Utilities & infra', score:12,
+      rationale:'Receitas previsíveis e ativos regulados dão caráter defensivo, mas juros longos altos competem diretamente com dividendos e pressionam empresas alavancadas. No Brasil, regulação, hidrologia e custo da dívida são centrais; nos EUA, o Treasury longo limita reprecificação de utilities e REITs.'},
+    {icon:'✈️', name:'Transporte & turismo', score:-40,
+      rationale:'Petróleo perto de máximas recentes aumenta combustível e pressiona companhias aéreas e logística. Câmbio e renda continuam importantes, mas o choque energético domina no curto prazo. Turismo pode preservar demanda, porém margens de transporte ficam mais vulneráveis quando combustível sobe rápido.'}
   ];
 
   function biasInfo(score){
@@ -5887,23 +6099,73 @@
     try{ if(typeof renderUpcoming === 'function') renderUpcoming(); }catch(e){}
   }
 
+
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)mtRenderMaturities();});
+  setInterval(()=>mtRenderMaturities(),60000);
+  function mtPortfolioInfo(item){
+    const known={PETR4:['Petrobras','Petróleo e gás'],BBDC4:['Bradesco','Bancos'],BBAS3:['Banco do Brasil','Bancos'],B3SA3:['B3','Infraestrutura financeira'],DIRR3:['Direcional','Construção civil'],CYRE3:['Cyrela','Construção civil'],POMO4:['Marcopolo','Bens industriais'],TOTS3:['TOTVS','Tecnologia'],GOOGL:['Alphabet','Tecnologia'],QCOM:['Qualcomm','Semicondutores'],EWY:['iShares MSCI South Korea ETF','ETF · Coreia do Sul']};
+    const ticker=String(item.asset||'').toUpperCase();const base=known[ticker]||[];
+    const positions=(typeof ctData!=='undefined'&&ctData.positions)||[];
+    const pos=positions.find(p=>String(p.asset||'').toUpperCase()===ticker);
+    return {name:item.name||base[0]||'',sector:item.sector||(pos&&pos.segment)||base[1]||'',avg:Object.prototype.hasOwnProperty.call(item,'avg')?item.avg:(pos&&Number(pos.avg)>0?Number(pos.avg):null),currency:item.currency||((pos&&pos.market==='EUA')||['GOOGL','QCOM','EWY','SPCX'].includes(ticker)?'USD':'BRL'),thesis:item.thesis||''};
+  }
+  function mtPortfolioDetails(item){
+    const d=mtPortfolioInfo(item),esc=escapeHtml;
+    const pm=d.avg!==null&&Number.isFinite(Number(d.avg))?Number(d.avg).toLocaleString('pt-BR',{style:'currency',currency:d.currency==='USD'?'USD':'BRL',maximumFractionDigits:4}):'Não informado';
+    return '<div class="portfolio-details"><strong>'+esc(d.name||'Adicionar nome do ativo')+'</strong><span>'+esc(d.sector||'Setor não informado')+'</span><span class="portfolio-pm">PM: '+esc(pm)+'</span><p class="portfolio-thesis">'+esc(d.thesis||'Clique no card para registrar sua tese.')+'</p></div>';
+  }
+  function mtMaturityRows(options,portfolio,today){
+    const dateMs=v=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(String(v)))return NaN;const ms=Date.parse(v+'T00:00:00Z');return Number.isFinite(ms)&&new Date(ms).toISOString().slice(0,10)===v?ms:NaN;};
+    const start=dateMs(today),rows=[];
+    options.forEach(o=>{const ms=dateMs(o.exp);if(ms>=start)rows.push({id:o.id,asset:o.asset||'Opção sem nome',kind:'option',type:o.type||'Opção',date:o.exp,days:Math.round((ms-start)/86400000),month:o.month||(o.date||'').slice(0,7)});});
+    portfolio.filter(p=>p.fixedIncome).forEach(p=>{const ms=dateMs(p.fixedIncome.end);if(ms>=start)rows.push({id:p.id,asset:p.asset,kind:'rf',type:p.fixedIncome.product||'Renda fixa',date:p.fixedIncome.end,days:Math.round((ms-start)/86400000)});});
+    return rows.sort((a,b)=>a.date.localeCompare(b.date)||String(a.asset).localeCompare(String(b.asset)));
+  }
+  let mtMaturityRequest=0;
+  async function mtRenderMaturities(){
+    const list=document.getElementById('mtMaturitiesList');if(!list)return;
+    const request=++mtMaturityRequest;
+    let data={};try{const saved=await storageGet('carteira-trader-v2');if(saved&&saved.value)data=JSON.parse(saved.value);}catch(e){}
+    if(request!==mtMaturityRequest)return;
+    const now=new Date(),today=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+    const rows=mtMaturityRows(Array.isArray(data.optionOps)?data.optionOps:[],portfolioItems,today);
+    document.getElementById('mtMaturitiesCount').textContent=rows.length;
+    list.innerHTML=rows.length?'':'<p>Nenhum vencimento futuro cadastrado. Adicione opções ou renda fixa na Carteira Trader.</p>';
+    rows.forEach(r=>{
+      const button=document.createElement('button');button.type='button';button.className='mt-maturity-row';
+      button.innerHTML='<span><strong>'+escapeHtml(r.asset)+'</strong><small>'+escapeHtml((r.kind==='rf'?'Renda fixa · ':'Opção · ')+r.type)+' · '+r.date.split('-').reverse().join('/')+'</small></span><span class="mt-maturity-time '+(r.days<=7?'soon':'')+'">'+(r.days===0?'Hoje':r.days===1?'Amanhã':r.days+' dias')+'</span>';
+      button.onclick=async()=>{
+        await ctLoad();openCarteiraTraderPage();
+        setTimeout(()=>{
+          if(r.kind==='rf'){const item=portfolioItems.find(p=>p.id===r.id);if(item){ctActivateTab('resumo');ctRfEdit(item);}}
+          else{ctMonth=r.month||r.date.slice(0,7);ctActivateTab('opcoes');const row=Array.from(document.querySelectorAll('#ctOopTable tr[data-id]')).find(el=>el.getAttribute('data-id')===r.id);if(row){row.scrollIntoView({behavior:'smooth',block:'center'});const input=row.querySelector('input');if(input)input.focus({preventScroll:true});}}
+        },100);
+      };
+      list.appendChild(button);
+    });
+  }
+
   function renderPortfolio(){
     const list = document.getElementById('portfolioList');
     if(!list) return;
+    mtRenderMaturities();
     if(!portfolioItems.length){
       list.innerHTML = '<div class="portfolio-empty">Nenhum ativo cadastrado ainda.</div>';
       return;
     }
     list.innerHTML = '';
     portfolioItems.forEach(item=>{
+      if(item.fixedIncome){ list.appendChild(ctRfPortfolioCard(item)); return; }
       const t = PORTFOLIO_TYPES.find(x=>x.id===item.type) || PORTFOLIO_TYPES[0];
       const row = document.createElement('div');
       row.className = 'portfolio-item';
+      const qtyStr = escapeHtml(String(item.qty !== undefined && item.qty !== '' ? item.qty : '—'));
       row.innerHTML = `
         <div class="portfolio-item-main">
           <div class="portfolio-item-ticker">${escapeHtml(item.asset)}</div>
+          ${mtPortfolioDetails(item)}
           <div class="portfolio-item-meta">
-            <span>Qtd: ${escapeHtml(String(item.qty !== undefined && item.qty !== '' ? item.qty : '—'))}</span>
+            <span class="portfolio-qty-pill" title="Quantidade">${qtyStr}</span>
             <span class="portfolio-type-badge" style="background:${t.color}26; color:${t.color};">${t.label}</span>
           </div>
         </div>
@@ -5923,7 +6185,14 @@
     document.getElementById('portfolioAsset').value = item ? item.asset : '';
     document.getElementById('portfolioQty').value = item ? item.qty : '';
     document.getElementById('portfolioType').value = item ? item.type : 'acao';
+    const details=mtPortfolioInfo(item||{});
+    document.getElementById('portfolioName').value=details.name||'';
+    document.getElementById('portfolioSector').value=details.sector||'';
+    document.getElementById('portfolioAvg').value=details.avg==null?'':details.avg;
+    document.getElementById('portfolioCurrency').value=details.currency;
+    document.getElementById('portfolioThesis').value=details.thesis||'';
     document.getElementById('portfolioForm').classList.remove('portfolio-hidden');
+    document.getElementById('portfolioForm').scrollIntoView({behavior:'smooth',block:'nearest'});
     document.getElementById('portfolioAsset').focus();
   }
 
@@ -5937,13 +6206,16 @@
     const qty = document.getElementById('portfolioQty').value.trim();
     const type = document.getElementById('portfolioType').value;
     if(!asset) return;
+    const avgText=document.getElementById('portfolioAvg').value;
+    if(avgText!==''&&(!Number.isFinite(Number(avgText))||Number(avgText)<0)){alert('Informe um preço médio válido.');return;}
+    const details={name:document.getElementById('portfolioName').value.trim(),sector:document.getElementById('portfolioSector').value.trim(),avg:avgText===''?null:Number(avgText),currency:document.getElementById('portfolioCurrency').value,thesis:document.getElementById('portfolioThesis').value.trim()};
     if(editingPortfolioId){
       const it = portfolioItems.find(x=>x.id===editingPortfolioId);
-      if(it){ it.asset = asset; it.qty = qty; it.type = type; }
+      if(it){ it.asset = asset; it.qty = qty; it.type = type; Object.assign(it,details); }
     } else {
       portfolioItems.push({
         id: 'ast_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
-        asset, qty, type
+        asset, qty, type, ...details
       });
     }
     await savePortfolio(); // já chama syncCalendarWithPortfolio
@@ -5953,8 +6225,10 @@
 
   async function deletePortfolioItem(id){
     portfolioItems = portfolioItems.filter(x=>x.id!==id);
+    if(ctRfDraft && ctRfDraft.id===id) ctRfDraft=null;
     await savePortfolio(); // já chama syncCalendarWithPortfolio
     renderPortfolio();
+    renderCtResumo();
   }
 
   
@@ -6896,13 +7170,13 @@
       ],
       // score: -100 venda … 0 lateral … +100 compra | angle: -90 (venda) a +90 (compra)
       masterThermo: {
-        score: 28,
+        score: 45,
         verdict: 'compra',
-        label: 'Viés de COMPRA',
-        hint: 'PETR 2T26 (6/ago) + EIA semanal · longs táticos / venda de put com IV · reduzir perto de geopolítica'
+        label: 'Viés de COMPRA tática',
+        hint: 'Petróleo ~US$ 97 · risco Ormuz elevado · EIA + produção BR no radar'
       },
       subtitle: 'Setor ciclado por oferta OPEP+, demanda global, prêmio geopolítico (Ormuz / Oriente Médio) e política de preços doméstica. PETR4 é o principal referência no Brasil; Brent e WTI ditam o tom global.',
-      panorama: '17/ago/2026: o mercado de petróleo segue guiado por inventários apertados vs. aumento gradual da oferta OPEP+ e risco geopolítico residual no Oriente Médio. O EIA (5/ago) apontou build de ~2,5 M barris nos estoques comerciais dos EUA (~407 M bbl), enquanto destilados e fluxos regionais ainda mostram folgas limitadas. O STEO da EIA revisou para baixo a trajetória de preços após o pico do 2T26, mas analistas notam que inventários globais baixos ainda sustentam o preço em agosto. A Petrobras divulga 2T26 em 6/ago — produção, Brent realizado, caixa e política de dividendos/preços no centro. Fed manteve 3,50%–3,75% (jul); próximo FOMC 15–16/set.',
+      panorama: '07/set/2026: o petróleo voltou ao centro do risco global. O Brent opera perto de US$ 97 por barril e o WTI perto de US$ 93 após nova escalada entre EUA e Irã e restrições ao tráfego na região do Estreito de Ormuz. Nos EUA, os estoques comerciais de petróleo estavam em 424,46 milhões de barris na semana encerrada em 28/ago, acima do fim de julho. No Brasil, a produção de petróleo atingiu 4,498 milhões bbl/d em julho, alta de 13,6% em 12 meses, com o pré-sal concentrando a maior parte do volume. Para PETR4, PRIO3 e pares, o efeito em cadeia é claro: petróleo mais caro ajuda receita e caixa, mas aumenta inflação, juros e volatilidade de mercado. O risco geopolítico está elevado e pede menor alavancagem em operações direcionais.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique no mês para ver o detalhe. O termômetro mostra o humor típico do período atual.',
         months: [
@@ -6932,14 +7206,14 @@
             detail:'<b>Dezembro</b><br>• Inverno no Norte: demanda de aquecimento em alta; clima extremo (Europa/EUA) pode gerar picos de preço.<br>• No Brasil, férias, Natal e viagens elevam gasolina; frete de comércio também pesa no diesel.<br>• Fundos e tesourarias rebalanceiam carteiras — volume e volatilidade em PETR e peers podem subir.<br>• Olho em: estoques de destilados, geopolitica de fim de ano e política de preços doméstica.'}
         ],
         currentMood: {
-          score: 62,
-          label: 'Humor sazonal: alerta moderado-alto',
-          period: 'Agosto · temporada de furacões no Golfo + fim do verão no Hemisfério Norte',
-          hint: 'Historicamente um dos períodos mais sensíveis do ano para o petróleo: risco climático nos EUA e demanda ainda elevada de combustível. Não é sinal de compra automática — só mostra que o calendário favorece mais volatilidade e prêmio de risco.'
+          score: 78,
+          label: 'Humor sazonal: alerta alto',
+          period: 'Setembro · pico estatístico de furacões + risco geopolítico no Golfo',
+          hint: 'Setembro já é sazonalmente volátil e, em 2026, o risco geopolítico reforça o prêmio. Use o calendário como amplificador de risco, não como sinal automático de compra.'
         }
       },
       indicators: [
-        {id:'brent', label:'Brent (ref.)', value:'US$ 86', dir:'flat', sub:'faixa 84–88 · pico ~100', bar:62, barCls:'amber'},
+        {id:'brent', label:'Brent (ref.)', value:'US$ 97,3', dir:'up', sub:'07/set · risco Ormuz', bar:82, barCls:'rose'},
         {id:'geo', label:'Prêmio geopolítico', value:'Elevado', dir:'up', sub:'Ormuz no radar', bar:78, barCls:'rose'},
         {id:'vol', label:'Volatilidade implícita', value:'Alta', dir:'up', sub:'opções PETR / petróleo', bar:72, barCls:'violet'},
         {id:'prod', label:'Produção PETR', value:'Positiva', dir:'up', sub:'crescimento no 2T26', bar:68, barCls:'teal'},
@@ -6948,17 +7222,17 @@
       ],
 contextCharts: [
         {id:'brent', name:'Brent (média mensal)', unit:'US$/bbl', type:'line', color:'#E1526B',
-          months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26','Jul/26'],
-          values:[78, 82, 95, 102, 92, 88, 86],
-          note:'Preço de referência global do petróleo · mercado · guia receita e caixa de PETR, PRIO e pares'},
+          months:['Jan/26', 'Fev/26', 'Mar/26', 'Abr/26', 'Mai/26', 'Jun/26', 'Jul/26', '07/set'],
+          values:[78, 82, 95, 102, 92, 88, 92.27, 97.31],
+          note:'Preço de referência global do petróleo · mercado · guia receita e caixa de PETR, PRIO e pares · spot de 07/set/2026'},
         {id:'eia', name:'Estoques comerciais EUA (EIA)', unit:'M barris', type:'line', color:'#F0A302',
-          months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26','Jul/26'],
-          values:[420, 415, 410, 408, 405, 404, 407],
-          note:'Estoque de crude nos EUA · EIA Weekly · build pressiona preço no curto prazo; nível ainda no radar'},
+          months:['24/jul', '31/jul', '07/ago', '14/ago', '21/ago', '28/ago'],
+          values:[404.508, 406.987, 424.41, 428.815, 428.91, 424.46],
+          note:'Estoque de crude nos EUA · EIA Weekly · build pressiona preço no curto prazo; nível ainda no radar · EIA semanal · milhões de barris'},
         {id:'prod_br', name:'Produção de petróleo Brasil', unit:'mil bbl/d', type:'line', color:'#00C2A8',
-          months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26'],
-          values:[3400, 3420, 3450, 3480, 3500, 3520],
-          note:'Produção nacional aproximada · ANP · volume físico sustenta tese mesmo com preço lateral'},
+          months:['Jan/26', 'Fev/26', 'Mar/26', 'Abr/26', 'Mai/26', 'Jun/26', 'Jul/26'],
+          values:[3400, 3420, 3450, 3480, 3500, 4460, 4498],
+          note:'Produção nacional aproximada · ANP · volume físico sustenta tese mesmo com preço lateral · ANP: julho 4,498 milhões bbl/d'},
         {id:'usd', name:'USD/BRL (fim de mês)', unit:'R$', type:'line', color:'#4FA3F7',
           months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26','Jul/26'],
           values:[5.85, 5.92, 5.78, 5.70, 5.65, 5.60, 5.55],
@@ -7043,13 +7317,13 @@ contextCharts: [
         {cls:'neutro', text:'Selic ainda alta'}
       ],
       masterThermo: {
-        score: 22,
-        verdict: 'compra',
-        label: 'Viés de COMPRA seletiva',
-        hint: 'Preferir BBDC4 / ITUB4 · cautela em BBAS3 · reduzir tamanho na semana do balanço'
+        score: 10,
+        verdict: 'lateral',
+        label: 'Viés LATERAL / seletivo',
+        hint: 'Selic 14% · crédito ainda caro · preferir balanços com NPL controlado'
       },
       subtitle: 'Setor guiado por margem financeira (margem financeira), custo de crédito, qualidade de ativos, Selic e sazonalidade de balanços. BBDC4, ITUB4, BBAS3, SANB11 e B3SA3 são os principais referências na B3.',
-      panorama: '17/ago/2026: o Copom cortou a Selic em 0,25 p.p. para 14% a.a. (5/ago), em decisão unânime, mas sem forward guidance claro — o comunicado reforçou cautela com expectativas de inflação e choques de oferta. O mercado divide-se entre pausa em 14% e novo corte em setembro. Bradesco (BBDC4) publicou 2T26 e segue no radar do aumento de capital (preferência 6/08–4/09). BBAS3 divulga 12/08 (provisões agro). B3SA3 com resultado 11/08. NIMs e qualidade de crédito continuam o eixo da tese com Selic ainda restritiva.',
+      panorama: '07/set/2026: a Selic está em 14,00% a.a. após o corte de agosto e o Copom volta a decidir em 15–16/set. Juros ainda muito altos sustentam receitas financeiras, mas mantêm o custo do crédito e o risco de inadimplência elevados. O Banco Central descreve atividade doméstica em moderação gradual, com mercado de trabalho ainda aquecido e expectativas de inflação acima da meta. Para BBDC4, ITUB4, BBAS3, SANB11 e B3SA3, o foco deve ficar em margem financeira, custo de captação, provisões, qualidade do crédito e crescimento das carteiras. Bancos com melhor capital e controle de inadimplência tendem a atravessar melhor um ciclo de cortes lento.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. O termômetro mostra o humor típico do período atual no setor financeiro.',
         months: [
@@ -7079,10 +7353,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>• 13º salário e gastos de fim de ano: sobe o giro de cartão e de crédito consignado/pessoal.<br>• Empresas buscam capital de giro para estoque e pagamento de bônus.<br>• Fundos rebalanceiam carteiras — bancos de grande liquidez sentem o fluxo.<br>• Inadimplência “boa” do 13º pode mascarar fragilidade que reaparece em janeiro/fevereiro.'}
         ],
         currentMood: {
-          score: 58,
-          label: 'Humor sazonal: atenção moderada',
-          period: 'Agosto · pós-balanços do 2T e ruído de fluxo / risco país',
-          hint: 'O calendário favorece digestão de resultados e sensibilidade a fluxo estrangeiro. Em 2026, o fator eleitoral começa a ganhar peso — o termômetro sobe mais por risco político do que por crédito do dia a dia.'
+          score: 48,
+          label: 'Humor sazonal: neutro',
+          period: 'Setembro · pré-Copom e revisão de crédito',
+          hint: 'O foco sai dos balanços e volta para juros, curva e qualidade do crédito.'
         }
       },
       indicators: [
@@ -7185,13 +7459,13 @@ contextCharts: [
         {cls:'neutro', text:'Clima e câmbio'}
       ],
       masterThermo: {
-        score: 35,
+        score: 18,
         verdict: 'compra',
-        label: 'Viés de COMPRA',
-        hint: 'Exportações e safra sustentam · atenção a clima, frete e inadimplência agro nos bancos'
+        label: 'Viés POSITIVO seletivo',
+        hint: 'Exportação + clima · frete/diesel e crédito caro limitam'
       },
       subtitle: 'Setor guiado por safra, preços de commodities (soja, milho, carnes), câmbio, China, clima e crédito rural. MBRF3, SLCE3 e nomes de proteínas/grãos são referências frequentes; o agro também impacta BBAS3 via carteira.',
-      panorama: '17/ago/2026: o agro segue sensível a clima (risco El Niño), frete/diesel e demanda chinesa. Selic a 14% (Copom 5/ago) mantém o custo de crédito rural elevado; Plano Safra em contratação. MBRF3 divulga 13/08 — proteínas, câmbio e China no foco. Soja e milho: acompanhar USDA e prêmios de exportação. Bancos com carteira agro (ex.: BBAS3 em 12/08) são o termômetro de inadimplência do setor.',
+      panorama: '07/set/2026: o agro brasileiro combina boa capacidade exportadora com custo financeiro ainda alto. A Selic em 14,00% encarece capital de giro e crédito rural, enquanto petróleo perto de US$ 97 eleva o risco de pressão em diesel, fertilizantes, frete e defensivos. China, clima e câmbio seguem como principais motores de soja, milho, proteínas e celulose. Para o investidor, a leitura deve separar produtor, processador de alimentos e empresa de insumos: o mesmo choque de commodity pode beneficiar um elo e pressionar outro. Em setembro, clima da próxima safra, USDA, exportações e custo logístico ganham importância.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. O termômetro mostra o humor típico do período atual no agronegócio.',
         months: [
@@ -7221,10 +7495,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>• Lavouras em desenvolvimento vegetativo; o risco migra para o veranico de janeiro/fevereiro.<br>• Exportações de fim de ano e o dólar influenciam o caixa do produtor e das tradings.<br>• Sazonalmente menos crítico que a colheita, mas o clima de verão já entra no preço das opções de grãos.'}
         ],
         currentMood: {
-          score: 42,
-          label: 'Humor sazonal: relativamente calmo',
-          period: 'Agosto · planejamento de safra e menos risco climático imediato',
-          hint: 'Fora do pico de colheita e de plantio, o calendário fica mais quieto. O que move o agro agora costuma ser preço internacional, China, câmbio e custo de insumo — não o clima do dia a dia no campo.'
+          score: 58,
+          label: 'Humor sazonal: moderado',
+          period: 'Setembro · plantio e clima começam a ganhar peso',
+          hint: 'Clima da próxima safra, frete e demanda chinesa passam a dominar o curto prazo.'
         }
       },
       indicators: [
@@ -7320,13 +7594,13 @@ contextCharts: [
         {cls:'neutro', text:'Regulação e investimentos'}
       ],
       masterThermo: {
-        score: 42,
+        score: 15,
         verdict: 'compra',
-        label: 'Viés de COMPRA',
-        hint: 'Setor defensivo com rendimentos · AXIA3 e transmissoras no radar · atenção a regulação e distribuição de proventos'
+        label: 'Viés POSITIVO defensivo',
+        hint: 'Receita regulada ajuda · juro alto limita valuation'
       },
       subtitle: 'Setor defensivo de elétricas: geração, transmissão e distribuição. Fatores: tarifa/regulação ANEEL, hidrologia, alavancagem, dividend yield e ciclo de investimentos. AXIA3 (ex-Eletrobras), TAEE11, ISAE4, CPLE3 e pares são os principais nomes.',
-      panorama: '17/ago/2026: após o corte da Selic a 14%, o setor elétrico segue como porto seguro em juros ainda altos. AXIA3 (ex-Eletrobras) reportou recuperação operacional no 1T26 e divulga 2T26 em 5/ago; o mercado observa EBITDA, desalavancagem e política de dividendos em meio a ciclo de investimentos. Transmissoras (Taesa, Isa Energia) mantêm tese de rendimentos e contratos de longo prazo. Riscos: mudanças regulatórias, hidrologia, alavancagem e eventual compressão de distribuição de proventos para financiar investimentos. Preferência de casas por infraestrutura como substituto de renda fixa enquanto a curva de juros não normaliza de forma plena.',
+      panorama: '07/set/2026: o setor elétrico brasileiro continua defensivo, mas não está imune ao juro. A Selic em 14,00% mantém elevado o custo de capital e aumenta a concorrência da renda fixa, ao mesmo tempo em que receitas reguladas e contratos longos ajudam a previsibilidade de caixa. Setembro ainda está dentro do período seco em boa parte do sistema, portanto reservatórios, carga, PLD e risco hidrológico permanecem no radar. Para geradoras, transmissoras e distribuidoras, acompanhe alavancagem, reajustes tarifários, capex e dividendos; empresas com balanço mais robusto tendem a reagir melhor a uma curva de juros longa pressionada.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. O termômetro mostra o humor típico do período atual em energia elétrica no Brasil.',
         months: [
@@ -7356,10 +7630,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>• Calor de fim de ano e consumo de refrigeração voltam a subir.<br>• Festas e comércio elevam a carga em centros urbanos.<br>• Se os reservatórios recuperaram, o setor entra no verão mais confortável; se não, o prêmio de risco permanece.'}
         ],
         currentMood: {
-          score: 55,
-          label: 'Humor sazonal: atenção moderada',
-          period: 'Agosto · estação seca e foco em reservatórios',
-          hint: 'No Brasil, agosto costuma ser sensível à hidrologia. O humor sobe se falta chuva e os lagos caem; melhora quando as previsões de primavera indicam precipitação regular.'
+          score: 64,
+          label: 'Humor sazonal: atenção',
+          period: 'Setembro · estação seca e reservatórios no radar',
+          hint: 'Carga, reservatórios e PLD importam mais neste período; juros seguem como segundo vetor.'
         }
       },
       indicators: [
@@ -7456,13 +7730,13 @@ contextCharts: [
         {cls:'alta', text:'Lançamentos seletivos'}
       ],
       masterThermo: {
-        score: 5,
-        verdict: 'lateral',
-        label: 'Viés LATERAL / seletivo',
-        hint: 'Selic alta freia demanda · preferir nomes com caixa e banco de terrenos · CYRE3, DIRR3, CURY3 no radar'
+        score: -35,
+        verdict: 'venda',
+        label: 'Viés de CAUTELA',
+        hint: 'Selic 14% ainda pesa em financiamento e múltiplos'
       },
       subtitle: 'Setor sensível a juros, emprego, FGTS, Minha Casa Minha Vida e confiança do consumidor. CYRE3, DIRR3, CURY3, MRVE3, EZTC3 e pares de mid/baixa renda são os principais referências.',
-      panorama: '17/ago/2026: DIRR3 e CYRE3 na temporada (11–13/ago). Selic a 14% continua o principal vento contrário para médio/alto padrão; baixa renda depende de crédito direcionado e FGTS. Velocidade de vendas e cancelamentos definem o múltiplo.',
+      panorama: '07/set/2026: a construção segue entre os setores mais sensíveis ao juro doméstico. Mesmo após o corte para 14,00%, a Selic continua muito alta para financiamento imobiliário e para o valuation de empresas de duração longa. O efeito é diferente por segmento: baixa renda conta com crédito direcionado e programas habitacionais, enquanto médio e alto padrão dependem mais das condições de mercado. Vendas, lançamentos, distratos, geração de caixa e velocidade de vendas devem pesar mais que o crescimento nominal da receita. Um ciclo de cortes mais lento mantém o setor seletivo e volátil.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. O termômetro mostra o humor típico do período atual na construção civil no Brasil.',
         months: [
@@ -7492,10 +7766,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>• 13º salário e meta de vendas de fim de ano: pico comercial típico.<br>• Canteiros desaceleram no recesso; o foco é escrever contratos e receber sinais.<br>• Janeiro costuma mostrar se a venda foi sólida ou se houve arrependimento/distrato.'}
         ],
         currentMood: {
-          score: 48,
-          label: 'Humor sazonal: neutro a levemente cauteloso',
-          period: 'Agosto · sem pico comercial forte; o juro manda no tom',
-          hint: 'Fora das campanhas de fim de ano, a construção reage mais à Selic e ao crédito imobiliário do que ao calendário. O termômetro fica perto do meio da escala.'
+          score: 42,
+          label: 'Humor sazonal: neutro-fraco',
+          period: 'Setembro · vendas melhoram, mas juro ainda limita',
+          hint: 'A sazonalidade ajuda pouco enquanto o custo do financiamento permanece elevado.'
         }
       },
       indicators: [
@@ -7594,13 +7868,13 @@ contextCharts: [
         {cls:'alta', text:'Dividendos cíclicos'}
       ],
       masterThermo: {
-        score: 0,
-        verdict: 'lateral',
-        label: 'Viés LATERAL',
-        hint: 'China e preço do minério mandam · VALE3 e GGBR4 no radar · atenção a dividendos e custo'
+        score: 20,
+        verdict: 'compra',
+        label: 'Viés POSITIVO seletivo',
+        hint: 'Minério > US$ 101/t · China continua decisiva'
       },
       subtitle: 'Setor cíclico guiado por preço do minério de ferro, aço, demanda chinesa, frete e custos energéticos. VALE3, GGBR4, CSNA3, USIM5 e CMIN3 são os principais referências na B3.',
-      panorama: '17/ago/2026: minério e aço reagem a China (PMI/demanda) e ao dólar com Fed estável. Selic a 14% no Brasil pesa no custo de capital de projetos. Prêmio geopolítico em energia afeta custos indiretos. Acompanhar dados de importação chinesa e estoques portuários.',
+      panorama: '07/set/2026: o minério de ferro 62% voltou a negociar acima de US$ 101/t na China, após semanas de recuperação. Isso melhora o pano de fundo para mineradoras, mas estoques portuários, atividade imobiliária chinesa e produção de aço continuam limitando e acelerando movimentos de preço. O petróleo mais caro eleva frete e custos energéticos, enquanto o dólar global e a política monetária americana afetam commodities em geral. Para VALE3, GGBR4 e CSNA3, separe a tese de minério da tese de aço: mineração responde mais ao preço internacional e volume; siderurgia depende também de spreads, demanda doméstica e custos.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. O termômetro mostra o humor típico do período atual em mineração e siderurgia.',
         months: [
@@ -7630,10 +7904,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>• Liquidez menor em muitos mercados; rebalanceamento de fundos em ações de commodities.<br>• Expectativa para o 1º trimestre chinês e para o clima no Brasil (chuvas de verão).<br>• Sazonalidade moderada — o preço do minério e o dólar mandam.'}
         ],
         currentMood: {
-          score: 50,
+          score: 55,
           label: 'Humor sazonal: neutro',
-          period: 'Agosto · pouco efeito de calendário local; China e preço do minério mandam',
-          hint: 'Mineração e aço no Brasil seguem sobretudo a demanda chinesa e o dólar. Agosto não é um mês “especial” no calendário climático das minas — o termômetro fica no meio, salvo choque de preço.'
+          period: 'Setembro · China e preço do minério dominam',
+          hint: 'O calendário pesa menos que minério, aço, frete e dados chineses.'
         }
       },
       indicators: [
@@ -7646,9 +7920,9 @@ contextCharts: [
       ],
 contextCharts: [
         {id:'ferro', name:'Minério de ferro 62% (ref. China)', unit:'US$/t', type:'line', color:'#E1526B',
-          months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26','Jul/26'],
-          values:[105, 108, 112, 118, 110, 106, 104],
-          note:'Preço spot de referência · mercado · principal driver de VALE3 e siderurgia'},
+          months:['Mar/26', 'Abr/26', 'Mai/26', 'Jun/26', 'Jul/26', '04/set'],
+          values:[107, 104, 102, 98.8, 99.8, 101.25],
+          note:'Preço spot de referência · mercado · principal driver de VALE3 e siderurgia · 62% Fe entregue China · referência de 04/set'},
         {id:'aco', name:'Preço aço (bobina)', unit:'índice', type:'line', color:'#F0A302',
           months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26'],
           values:[100, 102, 101, 99, 98, 97],
@@ -7728,13 +8002,13 @@ contextCharts: [
         {cls:'neutro', text:'Juros e fluxo'}
       ],
       masterThermo: {
-        score: 28,
-        verdict: 'compra',
-        label: 'Viés de COMPRA seletiva',
-        hint: 'Crescimento e digitalização · TOTS3, LWSA3, PAGS/STNE no radar · sensível a juros e múltiplos'
+        score: 5,
+        verdict: 'lateral',
+        label: 'Viés LATERAL',
+        hint: 'IA forte, mas yields e juros altos limitam múltiplos'
       },
       subtitle: 'Setor de software, pagamentos, marketplaces e serviços digitais. Fatores: crescimento de receita, margem, juros (múltiplos de crescimento), câmbio e ciclo de investimentos em TI. TOTS3, LWSA3, POSI3 e ADRs de fintechs/pagamentos são referências frequentes.',
-      panorama: '17/ago/2026: big techs e semicondutores (GOOGL, QCOM) reagem a juros EUA estáveis e à temporada de resultados. TOTS3 publicou 2T26 em 5/ago — receita recorrente e churn no radar local. Selic a 14% no Brasil ainda comprime múltiplos de growth doméstico, mas software B2B com caixa e recorrência permanece relativo vencedor. SPCX/EWY: fluxo para emergentes e Coreia ligado a semicondutores e apetite global por risco. Atores fora da bolsa (contexto setorial): OpenAI, Google DeepMind, xAI: Ferramentas de IA generativa mudam produtividade de software, atendimento e marketing no Brasil. Softwares listados locais (TOTS3 e peers) e integradores sentem demanda por features de IA e pressão de preço de produtos “com IA embutida” | Cloud privada / hyperscalers: Mesmo sem listar no Brasil, decisões de nuvem e de API de IA nos EUA alteram o mix de receita de empresas de TI e telecom brasileiras que revendem ou integram esses serviços | Perspectiva: No setor de tech BR, trate labs privadas e hyperscalers como ambiente competitivo e de demanda, não como ativos negociáveis. O preço das listadas locais responde a crescimento de receita, margem e ciclo de software corporativo.',
+      panorama: '07/set/2026: tecnologia combina dois vetores opostos. A demanda global por IA, nuvem e semicondutores continua forte, mas o payroll americano de agosto (+162 mil) e o petróleo perto de US$ 97 elevaram o risco de juros mais altos nos EUA. Isso pressiona múltiplos de crescimento mesmo quando a atividade de tecnologia segue saudável. No Brasil, Selic de 14,00% também restringe valuations. Para TOTS3 e pares, priorize receita recorrente, crescimento orgânico, margem e geração de caixa. Para GOOGL, QCOM e exposição internacional, acompanhe yields dos Treasuries, capex de data centers e demanda por chips.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. O termômetro mostra o humor típico do período atual em tecnologia no Brasil (software, serviços e ADRs ligados ao setor).',
         months: [
@@ -7764,10 +8038,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>• Corrida para fechar metas anuais de venda de software e de projetos.<br>• Liquidez menor na bolsa; rebalanceamento em ações de crescimento.<br>• Janeiro reabre o ciclo de orçamento com mais clareza.'}
         ],
         currentMood: {
-          score: 45,
-          label: 'Humor sazonal: relativamente calmo',
-          period: 'Agosto · sem pico sazonal local; juros e Nasdaq mandam',
-          hint: 'Tecnologia no Brasil tem pouca sazonalidade climática. Agosto costuma ser neutro no calendário; o humor vem sobretudo de juros, dólar e do setor de tech nos EUA.'
+          score: 50,
+          label: 'Humor sazonal: neutro',
+          period: 'Setembro · volta do calendário institucional',
+          hint: 'Mais eventos e fluxo retornam após agosto, mas yields dos EUA continuam decisivos.'
         }
       },
       indicators: [
@@ -7861,13 +8135,13 @@ contextCharts: [
         {cls:'alta', text:'Nomes resilientes'}
       ],
       masterThermo: {
-        score: 8,
-        verdict: 'lateral',
-        label: 'Viés LATERAL / seletivo',
-        hint: 'Renda e crédito do consumidor · MGLU3, LREN3, ARZZ3, ABEV3 no radar · preferir balanços saudáveis'
+        score: -30,
+        verdict: 'venda',
+        label: 'Viés de CAUTELA',
+        hint: 'Crédito caro · inadimplência e renda no centro'
       },
       subtitle: 'Setor guiado por renda real, crédito ao consumidor, confiança, inflação de alimentos e mix online/offline. LREN3, MGLU3, ARZZ3, SOMA3, ABEV3 e pares de consumo são os principais referências.',
-      panorama: '17/ago/2026: com Selic a 14% (Copom 5/ago), o crédito ao consumidor permanece caro e a inadimplência é o freio do varejo discricionário. Cortes graduais ajudam no margem, mas o efeito chega com defasagem. Temporada 2T26 e datas sazonais no radar.',
+      panorama: '07/set/2026: o varejo brasileiro continua pressionado pelo custo do crédito. A Selic em 14,00% restringe compras financiadas e aumenta despesas financeiras das empresas, enquanto inflação ainda acima da meta reduz espaço do consumidor. Emprego e renda ajudam a sustentar categorias essenciais, mas o discricionário continua mais sensível. Em setembro, a leitura deve combinar vendas do varejo, confiança, inadimplência, massa salarial e preparação para o 4º trimestre. Empresas com estoque controlado, menor alavancagem e capacidade de repassar preços tendem a apresentar menor risco.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. O termômetro mostra o humor típico do período atual no varejo e consumo no Brasil.',
         months: [
@@ -7897,10 +8171,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>• Natal e 13º salário: pico clássico do varejo brasileiro.<br>• Alimentar, presentes, moda e eletrônicos andam juntos.<br>• O que sobra de demanda e de endividamento aparece em janeiro.'}
         ],
         currentMood: {
-          score: 58,
-          label: 'Humor sazonal: atenção positiva moderada',
-          period: 'Agosto · Dia dos Pais no radar',
-          hint: 'Agosto traz o Dia dos Pais, um pico intermediário. Não é Black Friday nem Natal, mas já melhora o humor em relação aos meses sem data comemorativa forte.'
+          score: 46,
+          label: 'Humor sazonal: transição',
+          period: 'Setembro · preparação para o 4º trimestre',
+          hint: 'Crédito e renda ainda mandam; estoques e planejamento de Black Friday entram no radar.'
         }
       },
       indicators: [
@@ -7995,13 +8269,13 @@ contextCharts: [
         {cls:'neutro', text:'Regulação e fluxo'}
       ],
       masterThermo: {
-        score: 38,
-        verdict: 'compra',
-        label: 'Viés de COMPRA (alta vol)',
-        hint: 'BTC e tokenização (RWA) no radar · tamanho pequeno · atenção a regulação e liquidez'
+        score: -5,
+        verdict: 'lateral',
+        label: 'Viés LATERAL / volátil',
+        hint: 'BTC ~US$ 79 mil · Fed e CPI dominam o curto prazo'
       },
       subtitle: 'Setor de ativos digitais, Bitcoin, Ethereum e Real World Assets (tokenização). Fatores: fluxo de ETFs, liquidez global, regulação (CVM/BC/SEC), rendimentos de RWA e correlação com risk assets. Proxies: ETFs de cripto, exchanges e narrativas de tokenização na blockchain.',
-      panorama: '17/ago/2026: o fluxo institucional em RWA acelera — BlackRock avançou com fundos monetários tokenizados on-chain (Ethereum) e produtos de reserva para stablecoins, em paralelo a ETFs de renda com bitcoin (covered call). BTC permanece sob pressão relativa vs. narrativa de tokenização e ETH; liquididade global e Fed (juros estáveis em 3,50%–3,75%, próximo FOMC 15–16/set) ditam o risco. No radar: NFP (7/ago), CPI EUA (12/ago) e Jackson Hole (fim de ago). RWA total on-chain segue em expansão de dezenas de bilhões de dólares. Atores fora da bolsa (contexto setorial): Emissores e exchanges privadas: Parte relevante da liquidez de stablecoins e do fluxo em exchanges ocorre em entidades privadas ou com listagem limitada. Mudanças de reserva, regulação (EUA/UE) e de acesso bancário afetam BTC, ETH e nomes listados de cripto | IA + cripto (atores mistos): Projetos privados de infraestrutura e de tokens ligados a IA influenciam o sentiment de RWA e de tokens de infraestrutura, com efeito colateral em exchanges e mineradoras listadas | Perspectiva: Eventos em empresas privadas de cripto (hack, congelamento, mudança de lastro) costumam ser mais violentos que fatos de RI clássicos. Dimensionamento e liquidez importam mais que a manchete.',
+      panorama: '07/set/2026: Bitcoin negocia perto de US$ 79,3 mil e Ethereum perto de US$ 2,50 mil, com o mercado novamente concentrado em juros dos EUA. O payroll de agosto veio forte e elevou as apostas de alta do Fed em setembro; ao mesmo tempo, petróleo e geopolítica aumentam o risco de inflação. Esse ambiente reduz liquidez para ativos de maior beta. A tese de tokenização e RWA continua estruturalmente relevante, mas no curto prazo BTC, ETH e ações ligadas a cripto respondem principalmente a dólar, yields, fluxos de ETF e volatilidade. Evite confundir avanço tecnológico com sinal imediato de preço.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. O termômetro mostra o humor típico do período atual em cripto e RWA (tendências históricas de fluxo e de calendário, não garantia de retorno).',
         months: [
@@ -8031,10 +8305,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>• Realização de lucros e rebalanceamento de fim de ano em carteiras de risco.<br>• Liquidez pode cair na segunda quinzena (festas).<br>• Janeiro reabre o ciclo de alocação — o que aconteceu em dezembro pesa no humor inicial.'}
         ],
         currentMood: {
-          score: 38,
-          label: 'Humor sazonal: mais calmo (liquidez de verão)',
-          period: 'Agosto · liquidez tipicamente mais fina no verão do Hemisfério Norte',
-          hint: 'Em cripto, “sazonalidade” é sobretudo fluxo e liquidez, não clima. Agosto costuma ter menos volume; movimentos podem ser mais bruscos. O preço ainda depende muito de juros, ETFs e regulação.'
+          score: 44,
+          label: 'Humor sazonal: volátil',
+          period: 'Setembro · macro e liquidez dominam',
+          hint: 'Fed, CPI, dólar e fluxo de ETF são mais importantes que a sazonalidade.'
         }
       },
       indicators: [
@@ -8047,13 +8321,13 @@ contextCharts: [
       ],
 contextCharts: [
         {id:'btc', name:'Bitcoin (ref.)', unit:'US$ mil', type:'line', color:'#F0A302',
-          months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26','Jul/26'],
-          values:[95, 88, 72, 78, 85, 90, 92],
-          note:'Preço BTC · mercado · âncora de risco do ecossistema cripto e RWA'},
+          months:['Mar/26', 'Abr/26', 'Mai/26', 'Jun/26', 'Jul/26', '07/set'],
+          values:[84000, 79000, 76000, 72000, 63500, 79349.91],
+          note:'Preço BTC · mercado · âncora de risco do ecossistema cripto e RWA · spot aproximado de 07/set/2026'},
         {id:'eth', name:'Ethereum (ref.)', unit:'US$ mil', type:'line', color:'#9C7CF0',
-          months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26','Jul/26'],
-          values:[3.4, 3.1, 2.5, 2.7, 3.0, 3.2, 3.3],
-          note:'Preço ETH · mercado · indicador de atividade em smart contracts'},
+          months:['Mar/26', 'Abr/26', 'Mai/26', 'Jun/26', 'Jul/26', '07/set'],
+          values:[2050, 1900, 1750, 1650, 1890, 2497.6],
+          note:'Preço ETH · mercado · indicador de atividade em smart contracts · spot aproximado de 07/set/2026'},
         {id:'dxy', name:'Índice do dólar (DXY)', unit:'pts', type:'line', color:'#4FA3F7',
           months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26','Jul/26'],
           values:[104, 105, 106, 105, 104, 103, 103],
@@ -8128,13 +8402,13 @@ contextCharts: [
         {cls:'baixa', text:'Alavancagem alta'}
       ],
       masterThermo: {
-        score: -5,
-        verdict: 'lateral',
-        label: 'Viés LATERAL / cautela',
-        hint: 'Alto beta e dívida · GOLL4, AZUL4 no radar · atenção a combustível, câmbio e demanda'
+        score: -45,
+        verdict: 'venda',
+        label: 'Viés de VENDA / cautela',
+        hint: 'Brent ~US$ 97 aumenta risco de combustível e margem'
       },
       subtitle: 'Setor de alto beta: demanda de passageiros (RPK/ASK), tarifa média, preço do combustível de aviação, câmbio e alavancagem. GOLL4 e AZUL4 são os principais nomes líquidos; turismo e hotelaria correlacionam com renda e câmbio.',
-      panorama: '17/ago/2026: combustível de aviação ainda sensível ao petróleo; demanda doméstica compete com renda real e juros altos. Hedging de querosene e capacidade/assentos são o jogo operacional. Qualquer alívio no Brent ajuda margens.',
+      panorama: '07/set/2026: companhias aéreas enfrentam uma combinação difícil: petróleo e derivados em alta, dólar relevante para custos e juros domésticos ainda elevados. O Brent perto de US$ 97 aumenta a pressão sobre querosene de aviação e pode comprimir margens se tarifas não absorverem o choque. Demanda de passageiros, ocupação, capacidade, receita por assento e hedge de combustível precisam ser lidos em conjunto. Setembro normalmente marca retorno do tráfego corporativo após férias; porém, neste momento, energia e câmbio são mais importantes que a sazonalidade.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. O termômetro mostra o humor típico do período atual em aéreas e turismo no Brasil.',
         months: [
@@ -8165,9 +8439,9 @@ contextCharts: [
         ],
         currentMood: {
           score: 52,
-          label: 'Humor sazonal: intermediário',
-          period: 'Agosto · pós-férias de julho; corporativo no comando',
-          hint: 'Agosto não é o pico de lazer (isso é jan/jul/dez), mas também não é o fundo do poço. A demanda corporativa sustenta o mês; o combustível e o câmbio pesam na margem.'
+          label: 'Humor sazonal: moderado',
+          period: 'Setembro · volta do corporativo',
+          hint: 'Demanda corporativa melhora, mas combustível caro é o principal risco atual.'
         }
       },
       indicators: [
@@ -8260,13 +8534,13 @@ contextCharts: [
         {cls:'neutro', text:'Ciclo e juros'}
       ],
       masterThermo: {
-        score: 25,
-        verdict: 'compra',
-        label: 'Viés de COMPRA moderado',
-        hint: 'Infra, defesa e bens de capital · EMBJ3, WEGE3, RENT3 no radar · atenção a pedidos e margem'
+        score: -10,
+        verdict: 'lateral',
+        label: 'Viés LATERAL',
+        hint: 'PMI EUA forte, mas Selic e energia pressionam custos'
       },
       subtitle: 'Setor amplo: bens de capital, infraestrutura, logística, defesa e serviços industriais. Fatores: investimentos públicos/privados, infraestrutura, câmbio, commodities e ciclo de pedidos. WEGE3, EMBJ3, RENT3, RAIL3 e pares são referências frequentes.',
-      panorama: '17/ago/2026: POMO4 e industriais ligados a mobilidade/infra reagem a pedidos, exportação e ciclos de governo. Selic a 14% restringe CAPEX privado; obras e frota pública sustentam parte da demanda. Resultado 2T26 já no calendário de agosto. Atores fora da bolsa (contexto setorial): SpaceX e cadeia espacial: O ritmo de lançamentos da SpaceX e de programas privados de satélite/óptica afeta fornecedores industriais e de materiais, além da narrativa de “new space” em ações cíclicas e de defesa | Perspectiva: Impacto indireto via commodity, frete e humor de bens de capital. Poucas listadas locais têm beta direto; use como contexto macro-setorial.',
+      panorama: '07/set/2026: bens industriais operam com demanda ainda resiliente, mas custos e juros ganharam peso. Nos EUA, o PMI industrial de agosto ficou em 54,6, indicando expansão, embora mais lenta que em julho. No Brasil, a Selic em 14,00% limita capex privado, enquanto petróleo e diesel mais caros pressionam logística e insumos. POMO4, WEGE3 e pares devem ser avaliados por carteira de pedidos, exportação, margem, utilização de capacidade e repasse de custos. Empresas com receita externa e backlog longo podem amortecer a desaceleração doméstica.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. O termômetro mostra o humor típico do período atual em bens industriais no Brasil.',
         months: [
@@ -8296,10 +8570,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>• Muitas plantas reduzem ritmo ou param no recesso de fim de ano.<br>• Produção industrial mensal costuma cair por calendário.<br>• Janeiro herda o reinício — o ciclo sazonal de atividade é claro no virada do ano.'}
         ],
         currentMood: {
-          score: 47,
-          label: 'Humor sazonal: neutro',
-          period: 'Agosto · sem pico típico de fábrica',
-          hint: 'Bens industriais no Brasil têm sazonalidade forte sobretudo em janeiro/fevereiro e dezembro (recesso). Agosto costuma ser neutro; o juro e as encomendas mandam no tom.'
+          score: 54,
+          label: 'Humor sazonal: moderado',
+          period: 'Setembro · atividade volta ao ritmo normal',
+          hint: 'Pedidos, exportação e custos de energia ganham peso no início do 4T.'
         }
       },
       indicators: [
@@ -8395,13 +8669,13 @@ contextCharts: [
         {cls:'info', text:'Temporada 2T26'}
       ],
       masterThermo: {
-        score: 8,
+        score: 10,
         verdict: 'lateral',
-        label: 'Viés LATERAL / seletivo',
-        hint: 'Preferir farmácias e nomes com geração de caixa · operadoras de planos exigem seletividade · IPCA saúde e inadimplência no radar'
+        label: 'Viés LATERAL / defensivo',
+        hint: 'Demanda resiliente · separar operadoras, farmácias e pharma'
       },
       subtitle: 'Setor amplo no Brasil: operadoras de planos de saúde, redes hospitalares, diagnóstico, farmácias e indústria farmacêutica. Nomes de referência incluem Hapvida (HAPV3), Rede D’Or (RDOR3), Fleury (FLRY3), Raia Drogasil (RADL3), Hypera (HYPE3) e pares. O setor responde a custos médicos, sinistralidade, inadimplência de planos, regulação da ANS e ao poder de compra das famílias sob juros ainda altos.',
-      panorama: 'Em 6 de agosto de 2026, o setor de saúde na B3 permanece dividido. Do lado das operadoras e redes, o debate central continua sendo a combinação entre custo médico (sinistralidade), reajuste de mensalidades e inadimplência — num ambiente em que a Selic ainda está em 14% ao ano após o corte de 0,25 ponto do Copom em 5 de agosto. Farmácias e varejo de medicamentos (Raia Drogasil e pares) tendem a mostrar maior resiliência de volume, embora a margem dependa de mix, genéricos e despesa financeira. A indústria farmacêutica local (Hypera e pares) mistura lançamentos, concorrência de genéricos e câmbio em insumos. O IPCA de saúde e cuidados pessoais e o emprego formal influenciam tanto a utilização de serviços quanto a capacidade de pagar planos. A temporada de resultados do segundo trimestre de 2026, ao longo de agosto, deve trazer atualização de sinistralidade, ticket e orientação das principais listadas. Não trate o setor como um único beta: operadora, hospital, diagnóstico, farmácia e indústria farmacêutica têm motores diferentes.',
+      panorama: '07/set/2026: saúde permanece defensiva, mas os subsetores continuam muito diferentes entre si. Operadoras e hospitais dependem de sinistralidade, reajustes e utilização; farmácias dependem de volume, mix e margem; farmacêuticas combinam pipeline, genéricos e câmbio de insumos. A Selic em 14,00% mantém o custo financeiro alto para empresas alavancadas, mas a demanda por saúde tende a ser menos cíclica que varejo ou construção. Para a leitura de setembro, priorize geração de caixa, evolução de beneficiários, sinistralidade e disciplina de despesas.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. O termômetro mostra o humor típico do período atual em saúde no Brasil (hospitais, planos, farmácias e labs).',
         months: [
@@ -8431,10 +8705,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>• Feriados: eletivos caem; urgência e pronto-socorro sobem em algumas datas.<br>• Farmácias mantêm giro de contínuos e de verão (protetor, etc.).<br>• Janeiro reabre a agenda eletiva com força.'}
         ],
         currentMood: {
-          score: 54,
-          label: 'Humor sazonal: atenção residual de inverno',
-          period: 'Agosto · saída gradual do pico de vírus respiratórios',
-          hint: 'No Brasil, o inverno eleva gripes e o custo de planos e hospitais. Agosto já costuma aliviar em relação a junho/julho, mas ainda não é a primavera calma — por isso o termômetro fica em atenção moderada.'
+          score: 56,
+          label: 'Humor sazonal: moderado',
+          period: 'Setembro · transição para calendário mais ativo',
+          hint: 'Menor pressão respiratória no Brasil e retomada de eventos corporativos.'
         }
       },
       indicators: [
@@ -8532,13 +8806,13 @@ contextCharts: [
         {cls:'neutro', text:'Juros dos EUA no radar'}
       ],
       masterThermo: {
-        score: 32,
-        verdict: 'compra',
-        label: 'Viés de COMPRA seletiva',
-        hint: 'Priorize líderes de infraestrutura (chips, nuvem, rede) · evite empresas só de narrativa · Fed e inflação definem o múltiplo'
+        score: 10,
+        verdict: 'lateral',
+        label: 'Viés LATERAL / seletivo',
+        hint: 'Capex de IA forte · Treasury alto comprime múltiplos'
       },
       subtitle: 'Ecossistema de inteligência artificial com ações e recibos de depósito (ADR) negociados nos EUA: fabricantes de chips, provedores de nuvem, software e empresas de energia ligadas a data centers. Pensado para o investidor brasileiro que opera via corretora internacional, BDR ou ADR e precisa ler o cenário em português.',
-      panorama: 'Em 6 de agosto de 2026, a tese de inteligência artificial nos mercados americanos continua ancorada em três pilares: (1) o volume de investimento em infraestrutura de data centers pelos grandes provedores de nuvem — Microsoft, Alphabet (Google), Amazon e Meta; (2) a demanda por processadores gráficos e aceleradores especializados — NVIDIA, Broadcom e AMD; e (3) o custo de capital definido pelo Federal Reserve, que manteve a meta de juros na faixa de 3,50% a 3,75% em julho e só volta a se reunir formalmente em 15 e 16 de setembro. O payroll de junho saiu fraco (+57 mil vagas) e o índice de preços ao consumidor (CPI) de junho desacelerou para cerca de 3,5% ao ano, o que abriu espaço para o mercado precificar cortes futuros — mas o tom do banco central ainda é cauteloso. Na prática, múltiplos de empresas de crescimento reagem mais aos juros reais e ao orientação de investimento em nuvem do que a um único balanço isolado. Há um gargalo físico cada vez mais citado: energia elétrica, transformadores e conexão à rede. Por isso a narrativa de IA cruza com utilities e energia nuclear. Para quem investe do Brasil, o retorno em reais depende também da variação do dólar frente ao real: uma alta das ações em dólar pode ser parcialmente anulada (ou amplificada) pelo câmbio. Atores fora da bolsa (contexto setorial): OpenAI: OpenAI continua definindo o ritmo de produtos de IA generativa (ChatGPT, API e modelos de fronteira). Mesmo sem ações em bolsa, contratos de nuvem, compra de chips e preços de API mudam a receita de Microsoft, Amazon, Google e de fabricantes de semicondutores | xAI: A xAI compete em modelos de linguagem e em capacidade de treino. Expansão de data centers e de demanda por GPUs/accelerators pressiona a cadeia de chips e de energia elétrica — tema que atravessa IA, semis e utilities | Anthropic: Anthropic disputa o segmento enterprise de IA com foco em segurança e conformidade. Decisões de grandes clientes (trocar ou diversificar fornecedor de LLM) afetam volume de tokens, contratos de nuvem e o sentiment de ações de tech listadas | Perspectiva: Não há ticker direto de OpenAI/xAI/Anthropic. O canal de mercado é via hyperscalers (MSFT, GOOGL, AMZN), semis (NVDA e peers) e, no Brasil, via ADRs e via demanda de software/serviços que incorporam IA.',
+      panorama: '07/set/2026: inteligência artificial continua com demanda estrutural forte por aceleradores, rede, memória, energia e data centers. Porém, o pano de fundo financeiro ficou menos favorável: payroll de agosto em +162 mil, desemprego em 4,1%, Treasury de 10 anos perto de 4,8% e petróleo perto de US$ 97 aumentam a chance de Fed mais duro. Isso pode comprimir múltiplos mesmo com capex de IA elevado. Acompanhe crescimento de cloud, retorno do capex, utilização de data centers, disponibilidade de energia e capacidade de monetizar modelos de IA.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. Humor sazonal típico de empresas de inteligência artificial listadas nos EUA (e ADRs).',
         months: [
@@ -8568,10 +8842,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>• Rebalanceamento de fundos de crescimento e realização de lucros.<br>• Liquidez cai no final do mês; janeiro reabre o ciclo de narrativas e de orçamento.'}
         ],
         currentMood: {
-          score: 40,
-          label: 'Humor sazonal: liquidez de verão (mais calmo)',
-          period: 'Agosto · menos eventos e liquidez mais fina em Wall Street',
-          hint: 'IA nos EUA move-se por earnings e por capex, não por clima. Agosto costuma ser mais quieto no calendário — o que não impede volatilidade se sair uma notícia grande de chips ou de regulação.'
+          score: 54,
+          label: 'Humor sazonal: neutro',
+          period: 'Setembro · volta do calendário institucional',
+          hint: 'Fluxo melhora após agosto, mas Treasury alto aumenta sensibilidade do setor.'
         }
       },
       indicators: [
@@ -8588,9 +8862,9 @@ contextCharts: [
           values:[21000, 20500, 19800, 20200, 20800, 21200, 21500],
           note:'Humor de growth e IA · mercado'},
         {id:'yield', name:'Treasury 10 anos', unit:'%', type:'line', color:'#E1526B',
-          months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26','Jul/26'],
-          values:[4.35, 4.40, 4.55, 4.45, 4.30, 4.25, 4.20],
-          note:'Juro longo EUA · Treasury · comprime múltiplos de duration'},
+          months:['Mar/26', 'Abr/26', 'Mai/26', 'Jun/26', 'Jul/26', '07/set'],
+          values:[4.15, 4.28, 4.35, 4.48, 4.55, 4.79],
+          note:'Juro longo EUA · Treasury · comprime múltiplos de duration · Treasury 10 anos · referência de 07/set'},
         {id:'cpi', name:'CPI EUA (12 meses)', unit:'%', type:'line', color:'#F0A302',
           months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26'],
           values:[4.0, 3.9, 4.2, 4.0, 3.8, 3.5],
@@ -8665,13 +8939,13 @@ contextCharts: [
         {cls:'alta', text:'Política de reatores e SMR'}
       ],
       masterThermo: {
-        score: 38,
+        score: 25,
         verdict: 'compra',
-        label: 'Viés de COMPRA',
-        hint: 'Tese de longo prazo (energia firme para IA) · Constellation, Vistra, Cameco · volatilidade alta em small caps de SMR'
+        label: 'Viés POSITIVO',
+        hint: 'Demanda firme de energia + segurança de combustível'
       },
       subtitle: 'Geração nuclear, urânio, reatores modulares pequenos (SMR) e fornecedores listados nos EUA, incluindo ADRs. O setor voltou ao centro do debate porque data centers de inteligência artificial precisam de energia estável 24 horas por dia, e porque há política de extensão de vida útil de reatores já existentes.',
-      panorama: 'Em 6 de agosto de 2026, a energia nuclear nos Estados Unidos é discutida sob dois vetores principais. O primeiro é a demanda de data centers de inteligência artificial por energia despachável e contínua — o que levou grandes empresas de tecnologia a buscar contratos de longo prazo e a reaproximar investidores de geradoras com frota nuclear, como Constellation (CEG) e Vistra (VST). O segundo é a extensão de vida útil e a eventual reativação de reatores existentes, além do pipeline de reatores modulares pequenos, ainda sujeito a custos, prazos e licenciamento na comissão reguladora nuclear americana (NRC). No combustível, a Cameco (CCJ), listada no Canadá e negociada também nos EUA, reflete o ciclo de urânio e contratos de longo prazo com utilities. BWX Technologies (BWXT) representa a cadeia de componentes. Nomes puros de SMR, como NuScale (SMR), são muito mais voláteis e especulativos. O setor reage a preços de energia no atacado nos mercados regionais americanos, ao preço do gás natural (concorrente no despacho) e ao custo de capital — ainda elevado com juros na faixa de 3,50% a 3,75%. Para o investidor brasileiro, o caminho prático é concentrar-se em nomes líquidos, ler formulários 8-K e 10-Q e tratar SMR como capital de risco, não como núcleo da carteira.',
+      panorama: '07/set/2026: nuclear continua apoiado pela busca por geração firme para data centers e pela preocupação com segurança energética. A oferta de urânio e enriquecimento segue tema estratégico, com risco geopolítico relevante na cadeia de combustível. Juros longos altos aumentam o custo de grandes projetos, mas contratos de longo prazo e demanda de carga-base sustentam a tese estrutural. Em setembro, leia o setor por contratos, licenciamento, combustível, extensão de vida de usinas e acordos de fornecimento de energia para grandes consumidores.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. Humor sazonal e de calendário para energia nuclear e urânio (EUA / ADRs).',
         months: [
@@ -8701,10 +8975,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>• Frio eleva o consumo de energia; o nuclear permanece na base.<br>• Fim de ano: rebalanceamento em ações de energia e de commodities ligadas ao setor.'}
         ],
         currentMood: {
-          score: 60,
-          label: 'Humor sazonal: atenção por carga de verão',
-          period: 'Agosto · pico de ar-condicionado e stress possível na rede elétrica dos EUA',
-          hint: 'Nuclear não tem “colheita”, mas o verão americano destaca a necessidade de energia firme. Agosto eleva o termômetro por carga elétrica e por narrativa de confiabilidade da rede.'
+          score: 58,
+          label: 'Humor sazonal: moderado',
+          period: 'Setembro · demanda de rede segue alta',
+          hint: 'Energia firme e contratos de data center mantêm o tema ativo.'
         }
       },
       indicators: [
@@ -8796,13 +9070,13 @@ contextCharts: [
         {cls:'info', text:'Fundição (TSMC via ADR)'}
       ],
       masterThermo: {
-        score: 30,
+        score: 20,
         verdict: 'compra',
-        label: 'Viés de COMPRA seletiva',
-        hint: 'Priorize chips de IA e fundição líquidos · memória é outro ciclo · Fed e inflação no múltiplo'
+        label: 'Viés POSITIVO seletivo',
+        hint: 'IA sustenta chips · Fed e yields elevam volatilidade'
       },
       subtitle: 'Cadeia de semicondutores negociada nos EUA: projeto de chips (NVIDIA, AMD, Broadcom, Qualcomm, Intel), equipamentos de fabricação (ASML via ADR, Applied Materials, Lam Research, KLA) e fundição (TSMC via ADR). É essencial separar aceleradores de inteligência artificial, PCs e smartphones, e memória.',
-      panorama: 'Em 6 de agosto de 2026, a demanda por aceleradores e equipamentos de rede para data centers continua sendo o principal motor do subsetor de lógica e inteligência artificial. A TSMC, negociada também como ADR nos EUA (TSM), permanece o principal gargalo de capacidade nos nós de fabricação mais avançados. Fabricantes de equipamentos (ASML, Applied Materials, Lam, KLA) reagem aos planos de investimento das fundições e às carteiras de pedidos. Memória (por exemplo Micron) tem ciclo próprio de preços de DRAM e de memória de alta largura de banda. O Federal Reserve em manutenção de juros (3,50%–3,75%) e os dados de emprego e inflação de agosto definem o apetite por múltiplos de crescimento. Controles de exportação de tecnologia dos Estados Unidos em relação à China seguem como risco de destino da demanda. Para o investidor brasileiro, priorize tickers com alto volume e o horário de Nova York; TSMC e ASML, como ADRs, têm dinâmica própria de notícias locais (Taiwan e Países Baixos) além do pregão americano. Atores fora da bolsa (contexto setorial): OpenAI / xAI / Anthropic: Laboratórios de IA privados concentram pedidos de GPUs e aceleradores. Anúncios de novos clusters ou de atraso de entrega movem NVDA, AVGO, TSM e o sentiment de todo o ciclo de semicondutores — mesmo sem IPO dessas labs | Cerebras / Groq: Empresas privadas de inferência/treino competem com a stack dominante de GPU. Qualquer ganho de share ou de contrato grande vira narrativa de diversificação de fornecedor para as listadas | Perspectiva: A tese de semis em 2026 não é só “NVDA sobe”. É Capex de IA pública e privada. Monitorar guias de hyperscalers e notícias de clusters de labs privadas reduz o risco de surpresa no ciclo.',
+      panorama: '07/set/2026: semicondutores mantêm atividade forte, com destaque para demanda de IA e infraestrutura. O PMI industrial americano de agosto ficou em 54,6 e a Ásia abriu setembro com força em ações de chips. O principal freio é financeiro: Treasury de 10 anos perto de 4,8% e risco de alta do Fed aumentam volatilidade em growth. Para NVIDIA, AMD, Broadcom, Qualcomm e cadeia de equipamentos, acompanhe capex de hyperscalers, memória, utilização de foundries, export controls e margem bruta.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. Humor de calendário para semicondutores (EUA / ADRs).',
         months: [
@@ -8832,10 +9106,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>• Rebalanceamento e realização em papéis de chips após um ano frequentemente volátil.<br>• Janeiro reabre o ciclo de guidance.'}
         ],
         currentMood: {
-          score: 40,
-          label: 'Humor sazonal: liquidez de verão',
-          period: 'Agosto · menos earnings e liquidez mais fina',
-          hint: 'Semicondutores vivem de ciclo de demanda e de resultados trimestrais. Agosto costuma ser mais calmo no calendário — o risco continua sendo uma notícia de demanda de IA ou de geopolítica de chips.'
+          score: 60,
+          label: 'Humor sazonal: moderado-alto',
+          period: 'Setembro · retomada de fluxo e eventos',
+          hint: 'IA sustenta demanda, mas juros altos elevam volatilidade.'
         }
       },
       indicators: [
@@ -8856,9 +9130,9 @@ contextCharts: [
           values:[21000, 20500, 19800, 20200, 20800, 21200, 21500],
           note:'Beta de growth · mercado'},
         {id:'yield', name:'Treasury 10 anos', unit:'%', type:'line', color:'#E1526B',
-          months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26','Jul/26'],
-          values:[4.35, 4.40, 4.55, 4.45, 4.30, 4.25, 4.20],
-          note:'Juro longo · comprime múltiplos de chips de IA'},
+          months:['Mar/26', 'Abr/26', 'Mai/26', 'Jun/26', 'Jul/26', '07/set'],
+          values:[4.15, 4.28, 4.35, 4.48, 4.55, 4.79],
+          note:'Juro longo · comprime múltiplos de chips de IA · Treasury 10 anos · referência de 07/set'},
         {id:'equip', name:'Bookings equipment (índice de referência)', unit:'índice', type:'line', color:'#9C7CF0',
           months:['1T25','2T25','3T25','4T25','1T26','2T26'],
           values:[100, 108, 115, 112, 110, 108],
@@ -8926,13 +9200,13 @@ contextCharts: [
         {cls:'neutro', text:'Ciclo de contratos'}
       ],
       masterThermo: {
-        score: 34,
+        score: 40,
         verdict: 'compra',
         label: 'Viés de COMPRA',
-        hint: 'Lockheed, RTX, Northrop, General Dynamics · fluxo de contratos e orçamento federal'
+        hint: 'Geopolítica + execução de orçamento favorecem backlog'
       },
       subtitle: 'Grandes contratistas e cadeia de defesa listados nos Estados Unidos: Lockheed Martin, RTX, Northrop Grumman, General Dynamics e Boeing (defesa e aviação comercial). O setor é guiado pelo orçamento federal americano, pela geopolítica e pela execução de programas de longo prazo.',
-      panorama: 'Em 6 de agosto de 2026, o setor de defesa nos Estados Unidos permanece sustentado por tensões geopolíticas prolongadas e pelo debate de orçamento e autorizações de defesa no Congresso. Os grandes contratistas — Lockheed Martin, RTX, Northrop Grumman e General Dynamics — dependem da carteira de pedidos (carteira de pedidos), das margens de cada programa e do calendário de liberação de verbas. A Boeing mistura defesa e aviação comercial: o braço comercial carrega riscos próprios de produção, qualidade e certificação, e não deve ser lido como um puro nome de defesa. O nível de juros afeta menos este setor do que empresas de crescimento de tecnologia, mas o déficit fiscal e o embate orçamentário em Washington importam. Para o investidor brasileiro, o caminho é concentrar-se em nomes líquidos, acompanhar os formulários 8-K de contratos e os resultados trimestrais, e evitar tratar o setor como um único risco de mercado. Atores fora da bolsa (contexto setorial): SpaceX / Starlink: A SpaceX domina lançamentos e opera a constelação Starlink. Contratos governamentais, ritmo de launches e uso dual (civil/militar) afetam peers de defesa, satélite e telecom — mesmo sendo empresa privada | Anduril e peers privados: Empresas privadas de sistemas autônomos e software de defesa competem por orçamento do DoD e de aliados. Ganhos de contrato mudam a percepção de quem captura o próximo ciclo de modernização militar | Perspectiva: Exposição listada: contratistas tradicionais (LMT, RTX, NOC, GD) e nomes de satélite/comunicação. Starlink e SpaceX entram como fator de competição e de demanda de lançamento, não como ticker.',
+      panorama: '07/set/2026: defesa ganhou novo impulso com a escalada militar no Oriente Médio e ataques envolvendo rotas e infraestrutura de energia. O risco geopolítico elevado tende a sustentar demanda por munições, defesa aérea, sensores, comunicações e reposição de estoques. Ao mesmo tempo, orçamento e execução de contratos continuam essenciais: manchete de conflito não substitui backlog e margem. Em setembro, o setor entra perto do fechamento do ano fiscal americano, período em que execução orçamentária e contratos costumam ganhar atenção.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. Humor de calendário para o setor de defesa nos EUA.',
         months: [
@@ -8962,10 +9236,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>• Rebalanceamento em ações de defesa.<br>• O ano fiscal do governo já está no 1º trimestre — o efeito sazonal forte foi em set/out.'}
         ],
         currentMood: {
-          score: 42,
-          label: 'Humor sazonal: mais calmo (verão político)',
-          period: 'Agosto · recesso relativo em Washington; o pico sazonal de gasto costuma ser set/out',
-          hint: 'Defesa nos EUA tem sazonalidade de orçamento público (fim do ano fiscal em setembro), não de clima. Agosto costuma ser mais quieto na agenda política; o termômetro sobe de verdade perto de setembro–outubro.'
+          score: 72,
+          label: 'Humor sazonal: forte',
+          period: 'Setembro · fim do ano fiscal + geopolítica',
+          hint: 'Execução orçamentária e escalada no Oriente Médio elevam os catalisadores.'
         }
       },
       indicators: [
@@ -8990,9 +9264,9 @@ contextCharts: [
           values:[16, 18, 28, 22, 19, 17, 18],
           note:'Volatilidade de mercado · indicador de tensão · demanda por defesa sobe com risco'},
         {id:'brent', name:'Brent', unit:'US$/bbl', type:'line', color:'#F0A302',
-          months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26','Jul/26'],
-          values:[78, 82, 95, 102, 92, 88, 86],
-          note:'Petróleo · correlaciona com choques geopolíticos'},
+          months:['Mar/26', 'Abr/26', 'Mai/26', 'Jun/26', 'Jul/26', '07/set'],
+          values:[95, 102, 92, 88, 92.27, 97.31],
+          note:'Petróleo · correlaciona com choques geopolíticos · Brent spot 07/set/2026'},
         {id:'dxy', name:'DXY', unit:'pts', type:'line', color:'#9C7CF0',
           months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26','Jul/26'],
           values:[104, 105, 106, 105, 104, 103, 103],
@@ -9050,13 +9324,13 @@ contextCharts: [
         {cls:'info', text:'Temporada de resultados'}
       ],
       masterThermo: {
-        score: -5,
-        verdict: 'lateral',
-        label: 'Viés LATERAL / seletivo',
-        hint: 'Prefira qualidade (Costco, Walmart) · discricionário mais frágil · emprego e inflação no radar'
+        score: -20,
+        verdict: 'venda',
+        label: 'Viés de CAUTELA',
+        hint: 'Emprego forte ajuda consumo, mas inflação e Fed pesam'
       },
       subtitle: 'Varejo e consumo listados nos EUA: Walmart, Costco, Target, Amazon, Home Depot, entre outros. O setor responde a emprego, renda real, crédito ao consumidor e à orientação de vendas nas mesmas lojas e de ticket médio.',
-      panorama: 'Em 6 de agosto de 2026, o consumidor americano continua sendo a maior dúvida do ciclo. Com a meta de juros do Fed entre 3,50% e 3,75% e um CPI de junho em cerca de 3,5% ao ano (depois de um pico mais alto na primavera), o poder de compra e o custo da dívida das famílias estão no centro da análise. O varejo de itens essenciais — Walmart e Costco — tende a ser mais resiliente do que o discricionário (Target e nomes de moda e lifestyle). A Amazon mistura varejo e nuvem: não é um puro papel de loja. Home Depot e o varejo ligado à casa sentem o juro do financiamento imobiliário. O NFP de julho (7/ago) veio −23 mil (vs. +80 mil esperados), com revisões de −103 mil em mai–jun; desemprego em 4,1%. CPI de julho sai em 12/ago. Para o investidor brasileiro, o que importa nas teleconferências é o tom sobre a saúde do consumidor, as vendas comparáveis e a orientação de margem.',
+      panorama: '07/set/2026: o consumidor americano segue resistente, mas o risco de inflação voltou a subir com petróleo e diesel. O payroll de agosto avançou 162 mil e o desemprego ficou em 4,1%, o que sustenta renda e consumo, porém também reforça a possibilidade de alta do Fed. O CPI de julho estava em 3,4% a/a e o dado de agosto sai em 11/set. Para varejistas, acompanhe vendas mesmas lojas, estoques, margem, inadimplência de cartão e tráfego. Setembro encerra o back-to-school e inicia a preparação para o 4º trimestre.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. Humor sazonal do varejo nos EUA.',
         months: [
@@ -9086,10 +9360,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>• Natal: auge do calendário de consumo americano.<br>• O que não vender vai para liquidação de janeiro.<br>• Humor sazonal no máximo do ano.'}
         ],
         currentMood: {
-          score: 68,
-          label: 'Humor sazonal: forte (back-to-school)',
-          period: 'Agosto · volta às aulas nos EUA',
-          hint: 'No varejo americano, agosto é historicamente forte por causa da volta às aulas — só perde para o período de Thanksgiving, Black Friday e Natal. O termômetro sobe com razão neste mês.'
+          score: 58,
+          label: 'Humor sazonal: moderado',
+          period: 'Setembro · fim do back-to-school',
+          hint: 'Atenção migra para estoques, margem e preparação para holiday season.'
         }
       },
       indicators: [
@@ -9114,13 +9388,13 @@ contextCharts: [
           values:[3.0, 3.1, 3.2, 3.3, 3.4, 3.5],
           note:'Delinquency rates · Fed · estresse do consumidor discricionário'},
         {id:'cpi', name:'CPI EUA', unit:'%', type:'line', color:'#F0A302',
-          months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26'],
-          values:[4.0, 3.9, 4.2, 4.0, 3.8, 3.5],
-          note:'Inflação · BLS · renda real e Fed'},
+          months:['Mar/26', 'Abr/26', 'Mai/26', 'Jun/26', 'Jul/26'],
+          values:[3.7, 3.6, 3.5, 3.5, 3.4],
+          note:'Inflação · BLS · renda real e Fed · BLS · julho 3,4% a/a; agosto sai 11/set'},
         {id:'nfp', name:'Payroll (variação mensal)', unit:'mil', type:'bar', color:'#9C7CF0',
-          months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26'],
-          values:[180, 150, 120, 90, 70, 57],
-          note:'Emprego · BLS · base do consumo; junho fraco (+57k) no radar'}
+          months:['Mar/26', 'Abr/26', 'Mai/26', 'Jun/26', 'Jul/26', 'Ago/26'],
+          values:[120, 130, 115, 57, 21, 162],
+          note:'Emprego · BLS · base do consumo; junho fraco (+57k) no radar · BLS · agosto +162 mil'}
       ],
       econData: [
         {name:'Payroll EUA', date:'07/08/2026', prev:'+20 mil (jun rev.)', forecast:'+80 mil', actual:'−23 mil', actualDir:'down', actualDir:'flat', impact:'Emprego fraco aumenta o risco para o consumo discricionário; o varejo essencial costuma resistir melhor.'},
@@ -9175,13 +9449,13 @@ contextCharts: [
         {cls:'neutro', text:'Disciplina de investimento'}
       ],
       masterThermo: {
-        score: 38,
+        score: 50,
         verdict: 'compra',
-        label: 'Viés de COMPRA tático',
-        hint: 'Exxon, Chevron, ConocoPhillips, SLB · estoques semanais · OPEP+ e geopolítica'
+        label: 'Viés de COMPRA tática',
+        hint: 'WTI ~US$ 93 · Ormuz e estoques EIA sustentam prêmio'
       },
       subtitle: 'Petróleo e gás listados nos Estados Unidos: grandes integradas (ExxonMobil, Chevron), produtoras independentes (ConocoPhillips, EOG) e empresas de serviços (SLB, Halliburton, Baker Hughes). O preço do Brent e do WTI, a curva futura, os estoques semanais da EIA e a disciplina de investimento e de dividendos guiam o setor.',
-      panorama: 'O setor de petróleo e gás nos EUA reúne integradas (ExxonMobil, Chevron), independentes de shale (ConocoPhillips, EOG, Pioneer/ex) e serviços de petróleo (SLB, Halliburton, Baker Hughes). O WTI é a referência doméstica; o Brent manda no preço global e nas margens de exportação. Em ago/2026 o Brent opera elevado (faixa próxima de US$ 90–94) com prêmio geopolítico no Oriente Médio/Ormuz, enquanto a temporada de furacões no Golfo eleva o risco de interrupção de plataformas e refinarias. A EIA publica estoques semanais (em geral às quartas); builds ou draws movem WTI no curto prazo. OPEP+ e a disciplina de investimento das majors americanas (foco em retorno ao acionista vs. crescimento agressivo de oferta) continuam no centro do cenário. Para o investidor brasileiro, ADRs e correlatos na B3 reagem a WTI/Brent, ao dólar e ao fluxo de risco global. Atores fora da bolsa (contexto setorial): Data centers privados de IA: Expansão de treino e inferência de IA (atores privados e públicos) sustenta narrativa de demanda firme de eletricidade e, em algumas regiões, de gás para geração. Afeta integrated oils, midstream e utilities de forma indireta | Perspectiva: Petróleo e gás listados reagem a OPEP, estoques e geopolítica; a demanda de data center é um tema paralelo de power/utilities que às vezes contamina o sentiment de energia.',
+      panorama: '07/set/2026: energia é um dos setores com maior impulso tático. Brent perto de US$ 97,3 e WTI perto de US$ 92,7 refletem nova escalada no Oriente Médio e risco sobre o Estreito de Ormuz. Estoques comerciais americanos estavam em 424,46 milhões de barris em 28/ago. Integradas e produtores de shale se beneficiam do preço, enquanto refinadores e consumidores intensivos em combustível podem sofrer com spreads e custos. OPEP+, estoques EIA, tráfego no Golfo e produção americana são os principais gatilhos de curto prazo.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. Humor sazonal de óleo e gás nos EUA.',
         months: [
@@ -9211,10 +9485,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>• Demanda de aquecimento de volta com força se o inverno é frio.<br>• Gás natural costuma ser o mais volátil sob o ponto de vista climático.'}
         ],
         currentMood: {
-          score: 72,
-          label: 'Humor sazonal: tenso',
-          period: 'Agosto · furacões no Golfo + demanda residual de verão',
-          hint: 'Nos EUA, agosto combina risco de furacão no Golfo com demanda ainda elevada de combustível. É um dos meses mais sensíveis do calendário de óleo e gás — por isso o termômetro sobe.'
+          score: 78,
+          label: 'Humor sazonal: alerta alto',
+          period: 'Setembro · furacões + risco de Ormuz',
+          hint: 'Sazonalidade e geopolítica apontam para volatilidade acima do normal.'
         }
       },
       indicators: [
@@ -9227,13 +9501,13 @@ contextCharts: [
       ],
 contextCharts: [
         {id:'wti', name:'WTI', unit:'US$/bbl', type:'line', color:'#E1526B',
-          months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26','Jul/26'],
-          values:[74, 78, 90, 96, 88, 84, 82],
-          note:'Petróleo EUA · mercado · driver de XOM, CVX, COP'},
+          months:['24/jul', '31/jul', '07/ago', '14/ago', '21/ago', '07/set'],
+          values:[84.0, 87.5, 90.0, 88.0, 89.5, 92.65],
+          note:'Petróleo EUA · mercado · driver de XOM, CVX, COP · WTI spot 07/set/2026'},
         {id:'eia', name:'Estoques crude EUA', unit:'M barris', type:'line', color:'#F0A302',
-          months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26','Jul/26'],
-          values:[420, 415, 410, 408, 405, 404, 407],
-          note:'EIA Weekly · micro dado semanal do setor'},
+          months:['24/jul', '31/jul', '07/ago', '14/ago', '21/ago', '28/ago'],
+          values:[404.508, 406.987, 424.41, 428.815, 428.91, 424.46],
+          note:'EIA Weekly · micro dado semanal do setor · EIA · milhões de barris'},
         {id:'prod', name:'Produção crude EUA', unit:'M bbl/d', type:'line', color:'#00C2A8',
           months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26','Jul/26'],
           values:[13.3, 13.4, 13.5, 13.6, 13.7, 13.8, 13.8],
@@ -9300,13 +9574,13 @@ contextCharts: [
         {cls:'alta', text:'Grandes bancos líquidos'}
       ],
       masterThermo: {
-        score: 12,
-        verdict: 'lateral',
-        label: 'Viés LATERAL / seletivo',
-        hint: 'JPMorgan, Bank of America, Goldman, Morgan Stanley, Wells Fargo · emprego, inflação e qualidade do crédito'
+        score: 25,
+        verdict: 'compra',
+        label: 'Viés POSITIVO seletivo',
+        hint: 'Alta de juros pode ajudar NII · crédito e depósitos são risco'
       },
       subtitle: 'Bancos e grandes instituições financeiras dos Estados Unidos: JPMorgan, Bank of America, Wells Fargo, Goldman Sachs, Morgan Stanley e Citi. O setor responde à curva de juros, à margem financeira, à qualidade do crédito e à atividade de bancos de investimento.',
-      panorama: 'Em 6 de agosto de 2026, com o Federal Reserve mantendo a meta de juros entre 3,50% e 3,75%, o debate nos bancos americanos gira em torno da margem financeira líquida, do custo de captação, da qualidade do crédito (cartão de crédito e imóveis comerciais) e dos volumes de banco de investimento. Os grandes bancos de varejo (JPMorgan, Bank of America, Wells Fargo) enfatizam provisões e a orientação de receita de juros. O payroll de junho (+57 mil) e o CPI de junho (cerca de 3,5% ao ano) alimentam a precificação da próxima reunião do Fed, em setembro. Para o investidor brasileiro, é um setorial menos movido por narrativa do que inteligência artificial, e mais dependente de dados de crédito e de juros; a liquidez dos grandes nomes facilita a operação no horário de Nova York. Atores fora da bolsa (contexto setorial): Fintechs privadas e private credit: Grandes fintechs e fundos de private credit fora da bolsa competem com bancos listados em pagamentos, crédito ao consumidor e crédito corporativo médio. Ciclos de funding e de inadimplência nesses atores vazam para o sentiment bancário | Perspectiva: Bancos listados ainda dominam balanço e regulação. Acompanhe fintechs privadas como termômetro de competição de margem e de risco de crédito, não como substituto do NII e da PDD dos banks.',
+      panorama: '07/set/2026: bancos americanos ganharam um vetor favorável de margem com a volta das apostas de alta de juros, mas o cenário é mais complexo. O Fed mantém 3,50%–3,75%, payroll de agosto veio em +162 mil e o desemprego ficou em 4,1%. Juros mais altos por mais tempo podem sustentar receita de juros, mas também pressionam crédito, imóveis comerciais e custo de depósitos. Para JPMorgan, Bank of America, Wells Fargo, Goldman e Morgan Stanley, acompanhe NII, depósitos, provisões, charge-offs, curva de juros e atividade de mercado de capitais.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. Humor de calendário para bancos nos EUA.',
         months: [
@@ -9336,10 +9610,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>• Rebalanceamento em ações de bancos.<br>• Provisões e a saúde do crédito ao consumidor no pós-festas já começam a ser discutidas para o 1º trimestre seguinte.'}
         ],
         currentMood: {
-          score: 38,
-          label: 'Humor sazonal: mais calmo (verão)',
-          period: 'Agosto · entre temporadas de resultado; liquidez mais fina',
-          hint: 'Bancos nos EUA têm sazonalidade de calendário de resultados (jan, abr, jul, out), não de clima. Agosto costuma ser o mais quieto entre esses picos — o termômetro cai na escala de “tensão de calendário”.'
+          score: 54,
+          label: 'Humor sazonal: moderado',
+          period: 'Setembro · Fed e curva de juros no centro',
+          hint: 'Mercado volta a precificar juros e qualidade do crédito antes dos balanços do 3T.'
         }
       },
       indicators: [
@@ -9364,13 +9638,13 @@ contextCharts: [
           values:[0.15, 0.10, 0.05, 0.12, 0.20, 0.25, 0.28],
           note:'Inclinação da curva · Treasury · NII futuro'},
         {id:'nfp', name:'Payroll mensal', unit:'mil', type:'bar', color:'#F0A302',
-          months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26'],
-          values:[180, 150, 120, 90, 70, 57],
-          note:'BLS · emprego e risco de crédito'},
+          months:['Mar/26', 'Abr/26', 'Mai/26', 'Jun/26', 'Jul/26', 'Ago/26'],
+          values:[120, 130, 115, 57, 21, 162],
+          note:'BLS · emprego e risco de crédito · BLS · agosto +162 mil'},
         {id:'cpi', name:'CPI EUA', unit:'%', type:'line', color:'#9C7CF0',
-          months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26'],
-          values:[4.0, 3.9, 4.2, 4.0, 3.8, 3.5],
-          note:'BLS · path de juros e valuation de bancos'}
+          months:['Mar/26', 'Abr/26', 'Mai/26', 'Jun/26', 'Jul/26'],
+          values:[3.7, 3.6, 3.5, 3.5, 3.4],
+          note:'BLS · path de juros e valuation de bancos · BLS · julho 3,4% a/a'}
       ],
       econData: [
         {name:'Meta de juros / reunião do Fed', date:'jul/2026', prev:'3,50%–3,75%', forecast:'manutenção', actual:'manutenção', actualDir:'flat', impact:'A trajetória de cortes ou de juros altos por mais tempo redefine margem e valuation dos bancos.'},
@@ -9425,13 +9699,13 @@ contextCharts: [
         {cls:'info', text:'Eli Lilly · UnitedHealth · J&J'}
       ],
       masterThermo: {
-        score: 18,
-        verdict: 'compra',
-        label: 'Viés de COMPRA seletiva',
-        hint: 'Eli Lilly e inovação · UnitedHealth (planos de saúde) · biotecnologia = evento da FDA'
+        score: 10,
+        verdict: 'lateral',
+        label: 'Viés LATERAL / defensivo',
+        hint: 'Defensividade ajuda · biotech sofre com Treasury alto'
       },
       subtitle: 'Farmacêuticas, planos de saúde e biotecnologia listados nos EUA: Eli Lilly, UnitedHealth, Johnson & Johnson, Merck, AbbVie, Pfizer e biotecnológicas. Os motores são o pipeline de produtos, decisões da agência reguladora americana (FDA), preços de medicamentos e a utilização de serviços de saúde.',
-      panorama: 'Em 6 de agosto de 2026, o subsetor de inovação — em especial tratamentos para obesidade e diabetes, com a Eli Lilly e pares — continua atraindo fluxo de capital, enquanto os planos de saúde (UnitedHealth) dependem da evolução dos custos médicos e das regras de reembolso. As grandes farmacêuticas (Johnson & Johnson, Merck, AbbVie, Pfizer) combinam dividendos com pipeline de novos remédios. Biotecnologia pura é binária: aprovação ou rejeição na FDA e dados de estudos clínicos. Juros altos pesam mais sobre biotecnológicas ainda sem lucro do que sobre as grandes farmacêuticas. Para o investidor brasileiro, o caminho mais seguro é liquidez (Eli Lilly, UnitedHealth, Johnson & Johnson) e a leitura dos comunicados de RI e da FDA, evitando teses baseadas só em narrativa sem catalisador com data. Atores fora da bolsa (contexto setorial): Biotechs privadas e AI-drug discovery: Boa parte da descoberta de fármacos assistida por IA e de platforms early-stage é privada. Dados clínicos, parcerias com big pharma e rodadas de funding mudam o humor de biotechs listadas e de fornecedores de ferramentas | Perspectiva: Exposição via big pharma, equipment e biotechs líquidas. Notícia de lab privada é catalisador de narrativa, não substituto de trial e de caixa das listadas.',
+      panorama: '07/set/2026: saúde segue relativamente defensiva em um mercado com juros e geopolítica mais voláteis. O desemprego americano está em 4,1%, enquanto o CPI de serviços médicos continua mais comportado que o índice cheio. Grandes farmacêuticas dependem de pipeline, aprovações e volume; seguradoras e prestadores dependem de custos médicos e reembolso; biotechs continuam sensíveis ao Treasury de 10 anos perto de 4,8%. Em setembro, priorize catalisadores clínicos datados, geração de caixa e exposição a custos de financiamento.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. Humor sazonal de saúde e biotecnologia nos EUA.',
         months: [
@@ -9461,10 +9735,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>• Continuidade da temporada de vírus de inverno.<br>• Feriados reduzem eletivos; urgência sobe em algumas datas.<br>• Rebalanceamento em ações de saúde no fim do ano.'}
         ],
         currentMood: {
-          score: 36,
-          label: 'Humor sazonal: mais calmo (verão clínico)',
-          period: 'Agosto · fora do auge de gripe e com menos congressos',
-          hint: 'No verão americano a pressão de vírus de inverno é menor e o calendário de grandes congressos costuma ser mais leve. O termômetro cai; a tensão sazonal volta com mais força no outono (flu season).'
+          score: 54,
+          label: 'Humor sazonal: moderado',
+          period: 'Setembro · retomada de conferências e preparação para flu season',
+          hint: 'Catalisadores clínicos e defensividade ganham relevância.'
         }
       },
       indicators: [
@@ -9481,9 +9755,9 @@ contextCharts: [
           values:[3.8, 3.7, 3.9, 3.8, 3.6, 3.5],
           note:'Inflação de cuidados médicos · BLS · managed care e utilização'},
         {id:'unemp', name:'Desemprego EUA', unit:'%', type:'line', color:'#F0A302',
-          months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26'],
-          values:[4.0, 4.1, 4.1, 4.2, 4.2, 4.3],
-          note:'BLS · cobertura de planos e demanda por serviços'},
+          months:['Mar/26', 'Abr/26', 'Mai/26', 'Jun/26', 'Jul/26', 'Ago/26'],
+          values:[4.2, 4.2, 4.1, 4.1, 4.1, 4.1],
+          note:'BLS · cobertura de planos e demanda por serviços · BLS · agosto 4,1%'},
         {id:'xlv', name:'Health Care ETF (ref. índice)', unit:'pts', type:'line', color:'#00C2A8',
           months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26','Jul/26'],
           values:[145, 142, 140, 143, 146, 148, 150],
@@ -9493,9 +9767,9 @@ contextCharts: [
           values:[95, 90, 85, 88, 92, 94, 96],
           note:'Apetite por biotech · sensível a juros e FDA'},
         {id:'yield', name:'Treasury 10 anos', unit:'%', type:'line', color:'#4FA3F7',
-          months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26','Jul/26'],
-          values:[4.35, 4.40, 4.55, 4.45, 4.30, 4.25, 4.20],
-          note:'Duration de biotech e valuation · Treasury'}
+          months:['Mar/26', 'Abr/26', 'Mai/26', 'Jun/26', 'Jul/26', '07/set'],
+          values:[4.15, 4.28, 4.35, 4.48, 4.55, 4.79],
+          note:'Duration de biotech e valuation · Treasury · Treasury 10 anos · referência de 07/set'}
       ],
       econData: [
         {name:'CPI e custos médicos', date:'jul/2026', prev:'—', forecast:'—', actual:'componente de saúde no CPI', actualDir:'flat', impact:'Custos médicos afetam planos de saúde e a percepção de inflação de serviços.'},
@@ -9549,13 +9823,13 @@ contextCharts: [
         {cls:'neutro', text:'Receita ainda embrionária'}
       ],
       masterThermo: {
-        score: 18,
-        verdict: 'compra',
-        label: 'Viés de COMPRA especulativa',
-        hint: 'IONQ · RGTI · IBM · sizing pequeno · catalisadores de roadmap e contratos, não de lucro próximo'
+        score: -15,
+        verdict: 'venda',
+        label: 'Viés de CAUTELA',
+        hint: 'Juro longo alto penaliza tese de duração muito longa'
       },
       subtitle: 'Empresas listadas nos EUA ligadas a hardware, software e serviços de computação quântica: IonQ (IONQ), Rigetti (RGTI), IBM, além de exposição indireta via Big Tech (Google, Microsoft, Amazon). Setor de alta volatilidade, com receita ainda pequena frente ao valuation. Para o investidor brasileiro: capital de risco, horário de Nova York e liquidez concentrada em poucos tickers.',
-      panorama: 'Em 6 de agosto de 2026, a computação quântica permanece uma tese de infraestrutura de longo prazo, não de fluxo de caixa imediato. O mercado acompanha três eixos: (1) evolução de qubits, fidelidade e correção de erros nos roadmaps da IonQ, Rigetti e IBM; (2) contratos com governo e empresas (defesa, farmacêutica, finanças, logística); e (3) o apetite por ativos de crescimento nos EUA, sensível ao juro de 10 anos e ao CPI. A narrativa cruza com inteligência artificial — algoritmos híbridos e demanda de computação avançada — mas os prazos de monetização são diferentes. Nomes puros de quantum oscilam com força em anúncios de parceiros, resultados com receita modesta e diluição de capital. Prefira tamanho pequeno e catalisadores datados (roadmap, contratos, marcos técnicos). Atores fora da bolsa (contexto setorial): Startups privadas de quantum: Boa parte do avanço em hardware e software quântico ocorre em empresas fechadas ou em joint ventures com Big Tech. Anúncios de qubits lógicos, correção de erro e contratos governamentais influenciam as pure-plays listadas e os nomes de tech com divisão quântica | Big Tech + labs: Programas de acesso a hardware quântico e parcerias com labs privados definem o calendário de “hype” e de desilusão do setor. O preço das listadas reage a marcos técnicos, não só a balanços trimestrais | Perspectiva: Quantum listado continua especulativo. Use notícias de atores privados como filtro de narrativa, não como sinal de compra isolado.',
+      panorama: '07/set/2026: computação quântica continua uma tese de longo prazo e alto beta. O aumento do Treasury de 10 anos para perto de 4,8% reduz o valor presente de fluxos distantes e costuma pressionar empresas ainda sem lucro consistente. O setor continua dependente de marcos técnicos, contratos governamentais, parcerias e acesso a capital. Em setembro, trate anúncios de qubits e correção de erros como catalisadores técnicos, mas confirme sempre com caixa, diluição, receita contratada e cronograma de monetização.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. Humor de calendário para computação quântica (EUA).',
         months: [
@@ -9585,10 +9859,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>• Realização e rebalanceamento em temas especulativos.<br>• Liquidez cai no fim do mês; janeiro reabre o ciclo de histórias e de funding.'}
         ],
         currentMood: {
-          score: 35,
-          label: 'Humor sazonal: liquidez de verão (calmo em eventos)',
-          period: 'Agosto · poucos catalisadores típicos e liquidez mais fina',
-          hint: 'Computação quântica ainda não tem sazonalidade de “demanda de consumidor”. Agosto costuma ser quieto em eventos; mesmo assim, o papel pode oscilar muito por notícia pontual ou por falta de liquidez.'
+          score: 42,
+          label: 'Humor sazonal: neutro-fraco',
+          period: 'Setembro · volta do fluxo, mas juro longo pesa',
+          hint: 'Mais eventos não elimina a pressão de valuation sobre empresas de duração longa.'
         }
       },
       indicators: [
@@ -9609,13 +9883,13 @@ contextCharts: [
           values:[21000, 20500, 19800, 20200, 20800, 21200, 21500],
           note:'Apetite global por growth · contágio sobre nomes especulativos de tecnologia'},
         {id:'yield', name:'Treasury 10 anos', unit:'%', type:'line', color:'#E1526B',
-          months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26','Jul/26'],
-          values:[4.35, 4.40, 4.55, 4.45, 4.30, 4.25, 4.20],
-          note:'Juro longo EUA · comprime valuation de empresas sem lucro próximo'},
+          months:['Mar/26', 'Abr/26', 'Mai/26', 'Jun/26', 'Jul/26', '07/set'],
+          values:[4.15, 4.28, 4.35, 4.48, 4.55, 4.79],
+          note:'Juro longo EUA · comprime valuation de empresas sem lucro próximo · Treasury 10 anos · referência de 07/set'},
         {id:'cpi', name:'CPI EUA (12 meses)', unit:'%', type:'line', color:'#F0A302',
-          months:['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26'],
-          values:[4.0, 3.9, 4.2, 4.0, 3.8, 3.5],
-          note:'Inflação · BLS · define o tom do Fed e o múltiplo de growth'},
+          months:['Mar/26', 'Abr/26', 'Mai/26', 'Jun/26', 'Jul/26'],
+          values:[3.7, 3.6, 3.5, 3.5, 3.4],
+          note:'Inflação · BLS · define o tom do Fed e o múltiplo de growth · BLS · julho 3,4% a/a'},
         {id:'rd', name:'Interesse em P&D quântico (índice de referência)', unit:'índice', type:'bar', color:'#9C7CF0',
           months:['1T25','2T25','3T25','4T25','1T26','2T26'],
           values:[100, 110, 125, 120, 130, 135],
@@ -9677,13 +9951,13 @@ contextCharts: [
         {cls:'alta', text:'Data centers e carga'}
       ],
       masterThermo: {
-        score: 14,
+        score: -10,
         verdict: 'lateral',
-        label: 'Viés LATERAL / defensivo',
-        hint: 'XLU, NEE, DUK, SO · yields de 10–30 anos, tarifas estaduais e demanda de eletricidade'
+        label: 'Viés LATERAL',
+        hint: 'Carga de IA ajuda · Treasury alto pressiona múltiplos'
       },
       subtitle: 'Utilities elétricas nos EUA: geração, transmissão e distribuição regulada. O preço das ações costuma acompanhar o juro longo (quando o título público paga mais, o dividendo da utility perde atrativo) e as decisões das comissões estaduais de energia. Desde 2024–2026, a demanda de data centers de inteligência artificial entrou no debate de carga da rede e de novos investimentos.',
-      panorama: 'Em ago/2026 as utilities americanas seguem no meio do caminho entre defesa de carteira e pressão de juros. Os yields de títulos longos do Tesouro dos EUA permanecem elevados em perspectiva histórica recente, o que aperta o múltiplo de empresas com muita dívida e muito capex pela frente. Ao mesmo tempo, o verão no Hemisfério Norte eleva o uso de ar-condicionado e coloca a confiabilidade da rede no noticiário — tema reforçado pelo consumo de eletricidade de data centers de IA. NextEra, Duke, Southern e peers publicam guidances de investimento em transmissão, renovável e gás. Para o investidor, o jogo é: tarifa regulada (receita mais previsível) versus custo de capital (juro) e risco de atraso em obras. O ETF XLU resume o humor do setor; nomes individuais divergem conforme a região e o mix de geração. Atores fora da bolsa (contexto setorial): Labs de IA privadas: OpenAI, xAI, Anthropic e outras labs elevam a demanda projetada de eletricidade para data centers. Utilities e geradoras listadas reagem a anúncios de novos campi e a atrasos de conexão à rede | Perspectiva: A tese de utilities em 2026 mistura yields longos (valuation) com narrativa de carga de IA. Notícia de cluster privado grande move o sentimento setorial mesmo sem ser fato de RI de uma listada.',
+      panorama: '07/set/2026: utilities enfrentam forças opostas. A demanda de eletricidade de data centers e o consumo de verão sustentam necessidade de investimento em geração e rede, mas o Treasury de 10 anos perto de 4,8% pressiona valuations e encarece capex. O setor continua defensivo em receita, porém sensível a custo de capital. Avalie cada nome por base regulada, crescimento de carga, dívida, necessidade de emissão, aprovação tarifária e capacidade de financiar projetos sem destruir retorno ao acionista.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. O termômetro mostra o humor típico do período atual.',
         months: [
@@ -9713,10 +9987,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>Aquecimento + liquidez menor de fim de ano nos mercados.'}
         ],
         currentMood: {
-          score: 62,
-          label: 'Humor sazonal: atenção por carga de verão',
-          period: 'Agosto · calor e demanda de eletricidade nos EUA',
-          hint: 'No verão a rede americana trabalha mais carregada. O termômetro sobe com a estação e com a narrativa de data centers — o juro longo continua sendo o outro prato da balança.'
+          score: 56,
+          label: 'Humor sazonal: moderado',
+          period: 'Setembro · fim do verão e carga ainda relevante',
+          hint: 'Demanda elétrica ajuda, mas yields longos altos limitam o múltiplo.'
         }
       },
       indicators: [
@@ -9733,9 +10007,9 @@ contextCharts: [
           values:[100,99,98,97,99,100,101,100],
           note:'Série de referência · Utilities — índice de referência'},
         {id:'y10', name:'Treasury 10 anos (referência)', unit:'%', type:'line', color:'#E1526B',
-          months:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago'],
-          values:[4.2,4.3,4.25,4.35,4.4,4.45,4.5,4.55],
-          note:'Série de referência · Treasury 10 anos (referência)'},
+          months:['Abr', 'Mai', 'Jun', 'Jul', 'Ago', '07/set'],
+          values:[4.28, 4.35, 4.48, 4.55, 4.65, 4.79],
+          note:'Série de referência · Treasury 10 anos (referência) · Treasury 10 anos · referência de 07/set'},
         {id:'load', name:'Carga elétrica verão (referência)', unit:'índice', type:'bar', color:'#F0A302',
           months:['Mai','Jun','Jul','Ago'],
           values:[92,100,112,110],
@@ -9801,13 +10075,13 @@ contextCharts: [
         {cls:'neutro', text:'Preço e churn'}
       ],
       masterThermo: {
-        score: 6,
-        verdict: 'lateral',
-        label: 'Viés LATERAL',
-        hint: 'VIVT3, TIMS3 · 5G, fibra, Anatel, competição de preço e geração de caixa'
+        score: 18,
+        verdict: 'compra',
+        label: 'Viés POSITIVO defensivo',
+        hint: 'Receita recorrente · atenção à dívida com Selic alta'
       },
       subtitle: 'Operadoras de telecomunicações no Brasil: celular, internet fibra, TV e serviços para empresas. O negócio exige muito investimento em antenas, espectro (frequências) e fibra. A Anatel regula o setor. O lucro depende de cobrar um preço que cubra a rede e de não perder demais clientes para a concorrência (churn).',
-      panorama: 'Em 2026 a telecom brasileira continua no ciclo de amadurecimento do 5G e da fibra até a casa do cliente. A competição de preços no plano móvel e na banda larga segue apertada: promoções ajudam a ganhar assinante, mas comprimem a margem. Depois de anos de capex elevado (antena, espectro e fibra), o mercado cobra das operadoras mais geração de caixa livre e mais previsibilidade de dividendo. A Selic alta encarece a dívida de quem ainda refinancia investimentos pesados. Do lado da demanda, o uso de dados móveis e de streaming segue estruturalmente firme — o desafio é transformar tráfego em receita líquida. Telefônica (VIVT3), TIM (TIMS3) e demais players publicam resultados com foco em adições líquidas, ARPU (receita média por usuário), churn e alavancagem. Eventuais consolidações ou mudanças de regra da Anatel entram como catalisadores de médio prazo.',
+      panorama: '07/set/2026: telecom no Brasil continua em fase de monetização de 5G e expansão de fibra, com crescimento mais dependente de ARPU, churn e disciplina de capex do que de aumento puro de base. A Selic de 14,00% penaliza empresas com dívida elevada, mas a recorrência das receitas torna o setor relativamente defensivo. Em setembro, o foco deve ficar em reajustes, qualidade da rede, migração para planos de maior valor e geração de caixa livre. Operadoras com menor churn e melhor conversão de capex em receita tendem a se destacar.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. O termômetro mostra o humor típico do período atual.',
         months: [
@@ -9837,10 +10111,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>Fechamento de metas anuais e combos de fim de ano.'}
         ],
         currentMood: {
-          score: 48,
+          score: 52,
           label: 'Humor sazonal: neutro',
-          period: 'Agosto · sem pico comercial forte',
-          hint: 'O calendário comercial pesa mais no fim do ano. Em agosto o tom vem de preço, churn, caixa e juro — não de uma data sazonal específica.'
+          period: 'Setembro · preparação comercial para o fim do ano',
+          hint: 'ARPU, churn e caixa importam mais que o mês.'
         }
       },
       indicators: [
@@ -9924,13 +10198,13 @@ contextCharts: [
         {cls:'neutro', text:'Assinantes e dívida'}
       ],
       masterThermo: {
-        score: 8,
+        score: 5,
         verdict: 'lateral',
         label: 'Viés LATERAL',
-        hint: 'VZ, T, TMUS · adições de assinantes, ARPU, capex e dividendos'
+        hint: 'Caixa recorrente, mas dívida e yields pesam'
       },
       subtitle: 'Operadoras de telecomunicações listadas nos EUA (Verizon, AT&T, T-Mobile e peers). Mercado maduro: crescer assinante é difícil e caro; a disputa é por retenção, receita média (ARPU), qualidade de rede 5G/fibra e capacidade de pagar dividendo sem estourar a dívida.',
-      panorama: 'A telecom americana em 2026 permanece um setor de execução. T-Mobile, Verizon e AT&T reportam adições líquidas de linhas, ARPU, churn e o ritmo de investimento em 5G e fibra. O investidor compara quem ganha assinante sem destruir preço, e quem consegue transformar o capex passado em caixa livre. A alavancagem ainda é tema em parte do setor: com juros mais altos do que na década de 2010, refinanciar dívida custa mais. Convergência com conteúdo e serviços empresariais aparece nas teleconferências como tentativa de reduzir cancelamentos. Para quem investe do Brasil via ADR, o câmbio e o horário de Nova York entram na conta, além do risco regulatório e competitivo doméstico dos EUA. Atores fora da bolsa (contexto setorial): Starlink: A Starlink disputa banda larga em áreas rurais, marítimas e de baixa densidade, e avança em serviços B2B e governamentais. Operadoras listadas (VZ, T, TMUS e peers) monitoram perda de share em nichos e oportunidades de parceria | Perspectiva: Não trate Starlink como “fim das telecoms”. O impacto é regional e por segmento (rural, enterprise, backhaul). O balanço das listadas ainda depende de ARPU, churn e capex 5G/fibra.',
+      panorama: '07/set/2026: telecom americana continua uma tese de execução e geração de caixa. 5G já é infraestrutura madura; o foco migrou para ARPU, churn, fibra, convergência e disciplina de capex. Juros longos perto de 4,8% aumentam o peso da dívida e reduzem a atratividade relativa de dividendos. Em setembro, prefira empresas que consigam crescer serviço e fluxo de caixa livre sem reacelerar investimento de forma descontrolada. Promoções e retenção ganham importância na preparação para o fim do ano.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. O termômetro mostra o humor típico do período atual.',
         months: [
@@ -9960,10 +10234,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>Ofertas de retenção e combos de fim de ano.'}
         ],
         currentMood: {
-          score: 40,
-          label: 'Humor sazonal: liquidez de verão',
-          period: 'Agosto · entre earnings e promoções de fim de ano',
-          hint: 'O setor reage mais a resultados e à Black Friday do que ao clima. Agosto costuma ser mais calmo no calendário comercial.'
+          score: 52,
+          label: 'Humor sazonal: neutro',
+          period: 'Setembro · preparação para promoções de fim de ano',
+          hint: 'ARPU, churn, dívida e fluxo de caixa seguem mais importantes que sazonalidade.'
         }
       },
       indicators: [
@@ -9992,9 +10266,9 @@ contextCharts: [
           values:[5.0,5.1,5.2],
           note:'Série de referência · Dividend yield (referência)'},
         {id:'debt', name:'Dívida relativa (referência)', unit:'índice', type:'line', color:'#E1526B',
-          months:['2023','2024','2025','2026'],
-          values:[100,98,97,96],
-          note:'Série de referência · Dívida relativa (referência)'}
+          months:['1T26', '2T26', 'Jul', 'Ago', 'Set*'],
+          values:[100, 99, 99, 98, 98],
+          note:'Série de referência · Dívida relativa (referência) · índice relativo; juro longo segue elevado'}
       ],
       econData: [
         {name:'Fed Funds Rate', date:'29/07/2026', prev:'3,50–3,75%', forecast:'manutenção', actual:'3,50–3,75%', actualDir:'flat', impact:'Juro alto mantém o custo de refinanciamento no radar das operadoras endividadas.'},
@@ -10047,13 +10321,13 @@ contextCharts: [
         {cls:'alta', text:'Float e Selic'}
       ],
       masterThermo: {
-        score: 12,
-        verdict: 'lateral',
-        label: 'Viés LATERAL',
-        hint: 'BBSE3, PSSA3, SULA11 · prêmios, sinistros, índice combinado e resultado financeiro'
+        score: 22,
+        verdict: 'compra',
+        label: 'Viés POSITIVO seletivo',
+        hint: 'Selic favorece float · sinistralidade define qualidade'
       },
       subtitle: 'Seguradoras no Brasil vendem proteção (auto, vida, residência, previdência) e investem o dinheiro que guardam das reservas — o chamado float. O lucro vem de duas frentes: (1) precificar bem o risco (sobrar prêmio depois de pagar sinistros e despesas) e (2) render esse dinheiro no mercado, o que hoje ainda é ajudado por juros altos.',
-      panorama: 'Em 2026 o setor de seguros no Brasil opera com um vento a favor no resultado financeiro: a Selic ainda elevada melhora a rentabilidade das aplicações das reservas. O desafio está no underwriting — especialmente no seguro auto, onde preço de peças, mão de obra, roubo/furto e eventos climáticos (chuva forte, granizo) elevam o custo dos sinistros. As companhias listadas reportam crescimento de prêmios, sinistralidade, índice combinado (sinistros + despesas sobre prêmios) e o resultado financeiro. BB Seguridade, Porto e peers são acompanhados também pela política de dividendos e pela qualidade da distribuição (corretores, canais digitais e bancassurance). A Susep define regras de capital e de produto. Para o investidor, o ideal é ver prêmio crescendo sem sinistralidade fora de controle — e o float rendendo sem o balanço assumir risco excessivo de crédito ou de mercado.',
+      panorama: '07/set/2026: seguradoras brasileiras ainda se beneficiam de juros altos no resultado financeiro, porque as reservas rendem mais com a Selic em 14,00%. O outro lado é o risco de sinistros e inflação de custos, especialmente em auto, saúde e eventos climáticos. Prêmios, sinistralidade, índice combinado e retorno das aplicações devem ser analisados juntos. Setembro costuma ter menor risco de chuvas severas no Sudeste do que o verão, mas o petróleo caro pode elevar custos de peças, transporte e reparos. A melhor combinação é crescimento de prêmio com índice combinado controlado.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. O termômetro mostra o humor típico do período atual.',
         months: [
@@ -10083,10 +10357,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>Início do verão e deslocamentos de fim de ano elevam a exposição no auto.'}
         ],
         currentMood: {
-          score: 45,
-          label: 'Humor sazonal: neutro a calmo',
-          period: 'Agosto · fora do auge de chuvas de verão no SE',
-          hint: 'O seguro auto e residencial sente mais o verão chuvoso. Agosto costuma ser mais ameno no calendário climático da maior parte do país — o float e o underwriting mandam no tom.'
+          score: 50,
+          label: 'Humor sazonal: neutro',
+          period: 'Setembro · menor risco climático no Sudeste',
+          hint: 'Resultado financeiro segue favorável, mas sinistralidade continua o principal teste.'
         }
       },
       indicators: [
@@ -10170,13 +10444,13 @@ contextCharts: [
         {cls:'neutro', text:'Tarifa e capex'}
       ],
       masterThermo: {
-        score: 24,
+        score: 20,
         verdict: 'compra',
-        label: 'Viés de COMPRA moderado',
-        hint: 'SBSP3, SAPR11, CSMG3 · concessões, tarifa, universalização e marco do saneamento'
+        label: 'Viés POSITIVO defensivo',
+        hint: 'Receita previsível · capex e dívida são o principal risco'
       },
       subtitle: 'Empresas de água e esgoto no Brasil. Cobram tarifa pelo serviço, investem em rede (canos, estações de tratamento) e operam sob contratos de concessão. O marco legal do saneamento reforçou metas de universalização e abriu espaço a mais investimento privado e leilões.',
-      panorama: 'O saneamento brasileiro em 2026 continua sendo uma tese de longo prazo: ainda há déficit de esgoto tratado e de água encanada em várias regiões, e os contratos de concessão preveem investimento obrigatório para reduzir esse gap. Sabesp, Sanepar, Copasa e peers são acompanhados por reajuste tarifário, volume faturado, inadimplência, cumprimento de metas de cobertura e o custo de financiar obras com Selic ainda alta. O marco legal do saneamento (e suas regulamentações) sustenta a lógica de leilões, PPPs e metas de universalização — o que pode gerar novos ativos e novos competidores. Do lado operacional, seca extrema reduz volume e pressiona captação; chuvas fortes elevam custo de manutenção de rede. Para o acionista, a combinação desejada é tarifa que reajusta, inadimplência controlada e capex que se transforma em base de ativos remunerada — sem estourar a alavancagem.',
+      panorama: '07/set/2026: saneamento segue como tese de infraestrutura de longo prazo e receita relativamente previsível. A Selic em 14,00% aumenta o custo de financiamento de capex pesado, por isso alavancagem e cronograma de investimentos são centrais. Ao mesmo tempo, reajustes tarifários e expansão de cobertura podem sustentar crescimento de receita. Em setembro, a estação seca em várias regiões mantém atenção em disponibilidade hídrica. Avalie cada companhia por concessões, eficiência operacional, perdas de água, capex, dívida e evolução da universalização.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. O termômetro mostra o humor típico do período atual.',
         months: [
@@ -10206,10 +10480,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>Volta do risco de temporais sobre a infraestrutura.'}
         ],
         currentMood: {
-          score: 52,
-          label: 'Humor sazonal: atenção hídrica moderada',
-          period: 'Agosto · estação mais seca em várias bacias',
-          hint: 'Agosto costuma ser mais seco no regime de várias regiões do SE/CO. Isso pesa na operação de captação; a tese de tarifa e concessão continua sendo o motor principal do valuation.'
+          score: 56,
+          label: 'Humor sazonal: atenção',
+          period: 'Setembro · estação seca em várias bacias',
+          hint: 'Disponibilidade hídrica e execução de capex merecem acompanhamento.'
         }
       },
       indicators: [
@@ -10295,11 +10569,11 @@ contextCharts: [
       masterThermo: {
         score: 10,
         verdict: 'lateral',
-        label: 'Viés LATERAL',
-        hint: 'SUZB3, KLBN11, RANI3 · preço da celulose, demanda chinesa, USD/BRL e custo caixa'
+        label: 'Viés LATERAL / seletivo',
+        hint: 'China e preço da celulose mandam · petróleo encarece frete'
       },
       subtitle: 'Fabricantes de celulose e de papel no Brasil, em grande parte exportadores. A celulose é uma commodity industrial: o preço internacional sobe e desce conforme estoque, demanda (sobretudo China) e oferta das grandes produtoras. O dólar transforma essa receita em reais; o custo local (madeira, químicos, energia, frete) define a margem.',
-      panorama: 'Em 2026 o setor de papel e celulose no Brasil permanece cíclico. Suzano, Klabin e peers são lidos primeiro pelo preço da celulose de fibra curta e pelo câmbio. Quando a China desacelera ou os estoques globais sobem, o preço da fibra sofre; quando a oferta fica justa e a demanda reage, a margem se expande. O USD/BRL alto aumenta a receita convertida em reais, mas não elimina custos em real nem o frete. Paradas de manutenção, disciplina de capacidade dos grandes produtores e o custo energético entram no resultado. No segmento de embalagens e papel cartão, o consumo doméstico e o varejo também pesam. O investidor acompanhando o setor precisa aceitar volatilidade de commodity: não é utility, é ciclo de preço e de margem — com empresas brasileiras entre as mais competitivas do mundo em custo de produção de celulose de eucalipto.',
+      panorama: '07/set/2026: papel e celulose seguem dependentes de China, preço internacional e câmbio. A melhora recente do minério não garante o mesmo comportamento para celulose, porque cada commodity possui balanço de oferta próprio. Para Suzano, Klabin e pares, o que importa é o spread entre preço realizado e custo caixa, além de volume, frete e dólar. Petróleo perto de US$ 97 pode elevar logística e químicos. Em setembro, monitore demanda chinesa, estoques, novos projetos de capacidade e disciplina comercial dos grandes produtores.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. O termômetro mostra o humor típico do período atual.',
         months: [
@@ -10329,10 +10603,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>Rebalanceamento em ações de commodities.'}
         ],
         currentMood: {
-          score: 48,
+          score: 50,
           label: 'Humor sazonal: neutro',
-          period: 'Agosto · ciclo de preço global manda mais que o mês',
-          hint: 'Celulose não tem safra como a soja. Agosto é neutro no calendário local; o humor vem de preço internacional, China e câmbio.'
+          period: 'Setembro · preço global e China no comando',
+          hint: 'Sazonalidade é secundária frente a preço, câmbio, frete e estoques.'
         }
       },
       indicators: [
@@ -10416,13 +10690,13 @@ contextCharts: [
         {cls:'neutro', text:'Office fraco · DC firme'}
       ],
       masterThermo: {
-        score: -12,
+        score: -35,
         verdict: 'venda',
         label: 'Viés de CAUTELA',
-        hint: 'VNQ, PLD, EQIX, O, SPG · yields de 10–30 anos, FFO e qualidade do segmento'
+        hint: 'Treasury ~4,8% pressiona refinancing e dividend yield'
       },
       subtitle: 'REITs são empresas que donas de imóveis (ou de direitos sobre imóveis) e em geral distribuem boa parte do resultado como dividendo. Nos EUA há REITs de escritório, shopping, galpão logístico, data center, residencial e outros. O setor inteiro sente o juro longo; mas o fundamental de cada segmento é muito diferente.',
-      panorama: 'Em ago/2026 o tijolo listado nos EUA continua refém dos yields longos do Tesouro: quando o título de 10 ou 30 anos sobe, o dividendo do REIT perde atratividade relativa e o refinanciamento da dívida fica mais caro. Dentro do setor, a divisão é clara — escritórios em várias metrópoles ainda lidam com vacância ligada ao trabalho híbrido; shoppings dependem do consumo; galpões logísticos e data centers (IA e nuvem) sustentam narrativas mais firmes de demanda. O investidor sério não compra “REIT genérico”: olha ocupação, reajuste de aluguel, vencimento de dívida, FFO (medida de resultado operacional típica do setor) e o segmento. Prologis (logística), Equinix (data center) e REITs de escritório contam histórias distintas no mesmo ambiente de juro alto. Para o brasileiro, ETFs e ADRs trazem ainda o risco cambial.',
+      panorama: '07/set/2026: REITs continuam entre os ativos mais pressionados pelo juro longo. O Treasury de 10 anos perto de 4,8% aumenta custo de refinanciamento e concorre diretamente com dividend yields. A dispersão interna é grande: escritórios ainda carregam risco de vacância, logística depende de comércio e estoques, data centers se beneficiam da IA e residenciais dependem da oferta local. A leitura correta é por segmento, vencimento de dívida, ocupação, crescimento de aluguel e FFO. Sem queda dos yields, o viés agregado permanece defensivo/negativo.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. O termômetro mostra o humor típico do período atual.',
         months: [
@@ -10452,10 +10726,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>Rebalanceamento e realização em REITs.'}
         ],
         currentMood: {
-          score: 42,
-          label: 'Humor sazonal: liquidez de verão',
-          period: 'Agosto · juro longo manda mais que o calendário',
-          hint: 'REITs não têm safra. Agosto herda liquidez mais fina; o preço continua amarrado aos yields longos e à qualidade de cada segmento.'
+          score: 40,
+          label: 'Humor sazonal: fraco',
+          period: 'Setembro · juro longo domina o calendário',
+          hint: 'Treasury alto mantém pressão sobre refinancing e dividend yields.'
         }
       },
       indicators: [
@@ -10472,9 +10746,9 @@ contextCharts: [
           values:[100,98,97,96,95,94,93,92],
           note:'Série de referência · REITs — índice de referência'},
         {id:'y10', name:'Treasury 10a (referência)', unit:'%', type:'line', color:'#F0A302',
-          months:['Jan','Mar','Mai','Jul','Ago'],
-          values:[4.2,4.3,4.4,4.5,4.55],
-          note:'Série de referência · Treasury 10a (referência)'},
+          months:['Abr', 'Mai', 'Jun', 'Jul', 'Ago', '07/set'],
+          values:[4.28, 4.35, 4.48, 4.55, 4.65, 4.79],
+          note:'Série de referência · Treasury 10a (referência) · Treasury 10 anos · referência de 07/set'},
         {id:'office', name:'Vacância office (referência)', unit:'%', type:'line', color:'#E1526B',
           months:['2023','2024','2025','2026'],
           values:[14,16,17,18],
@@ -10540,13 +10814,13 @@ contextCharts: [
         {cls:'info', text:'Geopolítica'}
       ],
       masterThermo: {
-        score: 28,
+        score: 30,
         verdict: 'compra',
-        label: 'Viés de COMPRA moderado',
-        hint: 'Ouro spot, ETFs, mineradoras · juro real, DXY, bancos centrais e risco global'
+        label: 'Viés de COMPRA defensiva',
+        hint: 'Geopolítica apoia · juro real alto limita upside'
       },
       subtitle: 'O ouro é visto por muitos investidores como proteção (hedge) contra incerteza, inflação extrema e estresse geopolítico. O preço em dólar reage sobretudo a três forças: juro real (juro nominal menos inflação esperada), força do dólar e demanda de “medo” ou de bancos centrais. Mineradoras de ouro adicionam risco de custo, produção e gestão ao movimento do metal.',
-      panorama: 'Em ago/2026 o ouro permanece no centro do debate de ativos de proteção. Juros reais nos EUA, o índice do dólar (DXY) e tensões geopolíticas — inclusive no Oriente Médio — continuam sendo os principais motores do preço à vista. Quando o juro real sobe, o custo de oportunidade de carregar ouro (que não paga cupom) aumenta e o metal tende a sofrer; quando o juro real cai ou o risco global sobe, o ouro costuma ser procurado. Bancos centrais de vários países têm sido compradores líquidos em ciclos recentes, o que sustenta uma demanda estrutural além do joalheiro e do investidor de ETF. No Brasil, a exposição pode ser feita via ETFs de ouro, contratos futuros ou ações de mineradoras — cada caminho com riscos próprios (câmbio, liquidez, custo de extração all-in e hedge da empresa). Ouro não é “safra”: calendário sazonal pesa pouco frente ao macro e à geopolítica.',
+      panorama: '07/set/2026: o ouro segue forte como proteção geopolítica, mas sofre com juros reais altos. O metal à vista negocia perto de US$ 4.410/oz; ao mesmo tempo, o Treasury de 10 anos está perto de 4,8% após payroll forte. O efeito em cadeia é misto: guerra e petróleo sustentam procura por proteção, enquanto expectativa de alta do Fed aumenta o custo de oportunidade de carregar ouro. Para o investidor brasileiro, dólar/real também altera o retorno em reais. Use juro real, DXY, fluxo de ETF e geopolítica como conjunto, não isoladamente.',
       seasonality: {
         intro: 'Passe o mouse em cada mês para um resumo. Clique para o detalhe. O termômetro mostra o humor típico do período atual.',
         months: [
@@ -10576,10 +10850,10 @@ contextCharts: [
             detail:'<b>Dezembro</b><br>Liquidez menor; macro e geopolítica continuam no comando.'}
         ],
         currentMood: {
-          score: 50,
-          label: 'Humor sazonal: neutro',
-          period: 'Agosto · juro real, dólar e geopolítica',
-          hint: 'Ouro quase não tem sazonalidade climática. Agosto herda liquidez de verão; o preço segue juro real, dólar e risco global.'
+          score: 60,
+          label: 'Humor sazonal: proteção elevada',
+          period: 'Setembro · geopolítica forte, mas yields altos',
+          hint: 'Ouro recebe demanda de proteção, porém juros reais altos limitam o impulso.'
         }
       },
       indicators: [
@@ -10592,9 +10866,9 @@ contextCharts: [
       ],
       contextCharts: [
         {id:'gold', name:'Ouro — preço de referência', unit:'índice', type:'line', color:'#F0A302',
-          months:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago'],
-          values:[100,102,103,104,103,105,106,107],
-          note:'Série de referência · Ouro — preço de referência'},
+          months:['Abr', 'Mai', 'Jun', 'Jul', 'Ago', '07/set'],
+          values:[3920, 4010, 4180, 4290, 4380, 4410.55],
+          note:'Série de referência · Ouro — preço de referência · spot de 07/set/2026'},
         {id:'realrate', name:'Juro real (referência)', unit:'índice', type:'line', color:'#9C7CF0',
           months:['Jan','Mar','Mai','Jul','Ago'],
           values:[100,99,98,99,100],
@@ -10788,7 +11062,7 @@ contextCharts: [
       }
       html += '</div>';
     }
-    const panDate = (data.updated || '30/ago/2026');
+    const panDate = (data.updated || '07/set/2026');
     let panText = String(data.panorama || '');
     panText = panText.replace(/^(\d{1,2}\/[a-zç]{3}\/\d{4}:\s*)/i, '');
     panText = panText.replace(/^Em \d{1,2} de [a-zç]+ de \d{4},\s*/i, '');
@@ -13552,6 +13826,7 @@ contextCharts: [
   }
   async function ctSave(){
     try{ await storageSet(CT_KEY, JSON.stringify(ctData)); }catch(e){}
+    mtRenderMaturities();
   }
 
   function ctMonthKeyFromDate(d){
@@ -13855,9 +14130,117 @@ contextCharts: [
     });
   }
 
+
+  let ctRfDraft = null;
+  function ctRfDefaults(){
+    const start=new Date();const end=new Date(start);end.setFullYear(end.getFullYear()+1);
+    const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    return {name:'',product:'CDB',mode:'pre',principal:10000,rate:12,benchmark:10,start:iso(start),end:iso(end),tax:'reg',fee:0};
+  }
+  function ctRfCalc(d, daysOverride){
+    const days=daysOverride===undefined?Math.round((Date.parse(d.end+'T00:00:00Z')-Date.parse(d.start+'T00:00:00Z'))/86400000):daysOverride;
+    let annual=d.rate/100;
+    if(d.mode==='cdi') annual=Math.pow(1+(Math.pow(1+d.benchmark/100,1/252)-1)*d.rate/100,252)-1;
+    if(d.mode==='ipca') annual=(1+d.benchmark/100)*(1+d.rate/100)-1;
+    const gross=d.principal*Math.pow(1+annual,days/365),gain=Math.max(0,gross-d.principal);
+    const iofTable=[100,96,93,90,86,83,80,76,73,70,66,63,60,56,53,50,46,43,40,36,33,30,26,23,20,16,13,10,6,3];
+    const iof=d.tax==='reg'&&days<30?gain*(iofTable[days]||0)/100:0;
+    const irRate=d.tax==='exempt'?0:days<=180?.225:days<=360?.20:days<=720?.175:.15;
+    const ir=(gain-iof)*irRate,fees=d.principal*d.fee/100*days/365;
+    const net=gross-ir-iof-fees;
+    return {days,annual,gross,gain,iof,ir,irRate,fees,net,profit:net-d.principal};
+  }
+  function ctRfValid(d){
+    return d&&['pre','cdi','ipca'].includes(d.mode)&&['reg','exempt'].includes(d.tax)&&
+      [d.principal,d.rate,d.benchmark,d.fee].every(Number.isFinite)&&d.principal>0&&d.principal<=1e12&&d.rate>=0&&d.rate<=1000&&d.benchmark>=0&&d.benchmark<=100&&d.fee>=0&&d.fee<=100&&
+      /^\d{4}-\d{2}-\d{2}$/.test(d.start)&&/^\d{4}-\d{2}-\d{2}$/.test(d.end)&&ctRfCalc(d).days>0&&ctRfCalc(d).days<=36525&&Number.isFinite(ctRfCalc(d).net);
+  }
+  function ctRfRate(d){return String(d.rate).replace('.',',')+(d.mode==='cdi'?'% do CDI':d.mode==='ipca'?'% a.a. + IPCA':'% a.a.');}
+  function ctRfHtml(){
+    const d=ctRfDraft||ctRfDefaults();
+    const input=(key,label,type='number',extra='')=>'<label>'+label+'<input id="rf-'+key+'" name="'+key+'" type="'+type+'" value="'+escapeHtml(String(d[key]))+'" '+extra+'></label>';
+    const select=(key,label,opts)=>'<label>'+label+'<select id="rf-'+key+'" name="'+key+'">'+opts.map(o=>'<option value="'+o[0]+'"'+(d[key]===o[0]?' selected':'')+'>'+o[1]+'</option>').join('')+'</select></label>';
+    return '<section class="ct-card ct-rf" id="ctRfPanel"><div class="ct-rf-head"><h3>🏦 Calculadora de renda fixa</h3><span class="ct-rf-tag">Simular · cadastrar · acompanhar</span></div><div class="ct-rf-layout"><form id="ctRfForm"><div class="ct-rf-fields">'+
+      input('name','Nome do ativo','text','maxlength="100" placeholder="Ex.: CDB Banco • 2028"')+
+      select('product','Produto',[['CDB','CDB'],['LCI','LCI'],['LCA','LCA'],['Tesouro','Tesouro Direto'],['Outro','Outro título']])+
+      select('mode','Rentabilidade',[['pre','Prefixado'],['cdi','% do CDI'],['ipca','IPCA + taxa fixa']])+
+      input('principal','Valor aplicado (R$)','number','min="0.01" max="1000000000000" step="0.01" required')+
+      input('rate','Taxa contratada (%)','number','min="0" max="1000" step="0.01" required')+
+      input('benchmark','Índice projetado (% a.a.)','number','min="0" max="100" step="0.01" required')+
+      input('start','Data da aplicação','date','required')+input('end','Vencimento / resgate','date','required')+
+      select('tax','Tributação',[['reg','IR regressivo + IOF'],['exempt','Isento de IR e IOF']])+
+      input('fee','Custos estimados (% a.a.)','number','min="0" max="100" step="0.01" required')+
+      '</div><div class="ct-rf-actions"><button class="ct-btn primary" type="submit">'+(d.id?'Salvar alterações':'Cadastrar na carteira')+'</button><button class="ct-btn" type="button" id="ctRfNew">Nova simulação</button></div><div class="ct-rf-status" id="ctRfStatus" role="status"></div></form><div class="ct-rf-result" id="ctRfResult" aria-live="polite"></div></div><details class="ct-rf-note"><summary>Premissas e cálculo</summary>Simulação de um aporte único, sem cupons. Taxas de exemplo editáveis, sem cotação ao vivo. Juros compostos com ano de 365 dias; CDI convertido pela taxa diária de 252 dias úteis e prazo aproximado proporcional. CDI e IPCA constantes no período. IR e IOF sobre ganhos; custos estimados sobre o capital inicial, proporcionais ao prazo. Não inclui marcação a mercado ou condições específicas do emissor. A média mensal não representa pagamento mensal. Confirme a tributação do seu título. <a href="https://www.tesourodireto.com.br/como-investir/duvidas-frequentes/todas-as-duvidas" target="_blank" rel="noopener">Regras do Tesouro Direto</a>.</details><div class="ct-rf-saved" id="ctRfSaved"></div></section>';
+  }
+  function ctRfRead(){
+    const f=document.getElementById('ctRfForm');const d=Object.fromEntries(new FormData(f));
+    ['principal','rate','benchmark','fee'].forEach(k=>d[k]=d[k]===''?NaN:Number(d[k]));
+    if(ctRfDraft&&ctRfDraft.id)d.id=ctRfDraft.id;return d;
+  }
+  function ctRfResult(){
+    const d=ctRfRead();ctRfDraft=d;
+    const benchmark=document.getElementById('rf-benchmark');benchmark.disabled=d.mode==='pre';
+    benchmark.parentElement.firstChild.textContent=d.mode==='ipca'?'IPCA projetado (% a.a.)':'CDI projetado (% a.a.)';
+    // Disabled controls are absent from FormData; retain the visible assumption.
+    d.benchmark=Number(benchmark.value);
+    const out=document.getElementById('ctRfResult');
+    if(!ctRfValid(d)){out.textContent='Informe valores válidos e um vencimento posterior à aplicação (até 100 anos).';return;}
+    const r=ctRfCalc(d),money=ctMoney;
+    const cells=[['Capital aplicado',money(d.principal)],['Rendimento líquido',money(r.profit)],['Saldo bruto',money(r.gross)],['IR ('+(r.irRate*100).toFixed(1).replace('.',',')+'%)',money(r.ir)],['IOF',money(r.iof)],['Custos estimados',money(r.fees)],['Média líquida / mês',money(r.profit/(r.days/365*12))],['Prazo',r.days+' dias']];
+    const points=Array.from({length:25},(_,i)=>ctRfCalc(d,Math.round(r.days*i/24)).net);
+    const low=Math.min(...points),high=Math.max(...points),span=high-low||1;
+    const path=points.map((v,i)=>(i?'L':'M')+(10+i*280/24).toFixed(1)+','+(78-(v-low)/span*60).toFixed(1)).join(' ');
+    out.innerHTML='<div style="font-size:14px;color:var(--text-dim)">Saldo líquido estimado no vencimento</div><div class="ct-rf-total">'+money(r.net)+'</div><div class="ct-rf-metrics">'+cells.map(c=>'<div>'+c[0]+'<strong>'+c[1]+'</strong></div>').join('')+'</div><svg role="img" aria-label="Evolução estimada do saldo líquido da aplicação ao vencimento" viewBox="0 0 300 90" style="width:100%;margin-top:18px"><path d="'+path+'" fill="none" stroke="var(--teal)" stroke-width="3"/></svg><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-dim)"><span>Aplicação</span><span>Vencimento</span></div>';
+  }
+  function ctRfSaved(){
+    const el=document.getElementById('ctRfSaved');if(!el)return;
+    const items=portfolioItems.filter(p=>p.fixedIncome);
+    el.innerHTML='<h4 style="margin:0 0 8px">Ativos cadastrados <span class="ct-rf-tag">'+items.length+'</span></h4>'+(items.length?'':'<p class="ct-rf-note">Cadastre um ativo para vê-lo aqui e na Minha Carteira.</p>');
+    items.forEach(item=>{
+      const row=document.createElement('div');row.className='ct-rf-saved-row';
+      row.innerHTML='<div><strong>'+escapeHtml(item.asset)+'</strong><small>'+escapeHtml(ctRfRate(item.fixedIncome))+' · Aplicado '+ctMoney(item.fixedIncome.principal)+'</small></div><div><button type="button" class="ct-btn">Editar</button> <button type="button" class="ct-btn">Excluir</button></div>';
+      const buttons=row.querySelectorAll('button');buttons[0].onclick=()=>ctRfEdit(item);buttons[1].onclick=()=>ctRfDelete(item);el.appendChild(row);
+    });
+  }
+  function ctRfEdit(item){ctRfDraft={...item.fixedIncome,name:item.asset,id:item.id};renderCtResumo();document.getElementById('ctRfPanel').scrollIntoView({behavior:'smooth',block:'center'});document.getElementById('rf-name').focus();}
+  async function ctRfDelete(item){
+    if(!confirm('Excluir '+item.asset+' da renda fixa e da Minha Carteira?'))return;
+    const next=portfolioItems.filter(p=>p.id!==item.id);
+    if(!await storageSet(PORTFOLIO_KEY,JSON.stringify(next))){alert('Não foi possível salvar a exclusão.');return;}
+    portfolioItems=next;if(ctRfDraft&&ctRfDraft.id===item.id)ctRfDraft=null;
+    renderPortfolio();renderCtResumo();
+  }
+  function ctRfPortfolioCard(item){
+    const row=document.createElement('div');row.className='portfolio-item ct-rf-card';
+    const d=item.fixedIncome;
+    row.innerHTML='<div class="portfolio-item-main"><div class="portfolio-item-ticker">'+escapeHtml(item.asset)+'</div><div class="portfolio-item-meta"><span class="portfolio-type-badge">Renda fixa · '+escapeHtml(d.product)+'</span></div><div class="ct-rf-card-value">'+ctMoney(d.principal)+'</div><small>Aplicado · '+escapeHtml(ctRfRate(d))+'</small><small>Vencimento: '+escapeHtml(d.end.split('-').reverse().join('/'))+'</small><small>Líquido projetado: '+ctMoney(ctRfCalc(d).net)+'</small><button type="button" class="ct-btn" style="margin-top:8px">Editar simulação</button></div><button type="button" class="portfolio-item-del" title="Excluir ativo">✕</button>';
+    row.querySelector('.ct-btn').onclick=()=>{openCarteiraTraderPage();setTimeout(()=>{ctActivateTab('resumo');ctRfEdit(item);},150);};
+    row.querySelector('.portfolio-item-del').onclick=()=>ctRfDelete(item);return row;
+  }
+  function ctRfBind(){
+    const f=document.getElementById('ctRfForm');if(!f)return;
+    f.addEventListener('input',()=>{document.getElementById('ctRfStatus').textContent='';ctRfResult();});
+    document.getElementById('rf-product').addEventListener('change',()=>{document.getElementById('rf-tax').value=['LCI','LCA'].includes(document.getElementById('rf-product').value)?'exempt':'reg';ctRfResult();});
+    document.getElementById('ctRfNew').onclick=()=>{ctRfDraft=null;renderCtResumo();};
+    f.onsubmit=async e=>{
+      e.preventDefault();ctRfResult();const d={...ctRfDraft};const status=document.getElementById('ctRfStatus');
+      if(!ctRfValid(d)||!d.name.trim()){status.textContent='Preencha o nome do ativo e confira os valores.';return;}
+      const id=d.id||ctUid(),item={id,asset:d.name.trim(),qty:d.principal,type:'renda_fixa',fixedIncome:{...d,id}};
+      const next=portfolioItems.filter(p=>p.id!==id);next.push(item);
+      if(!await storageSet(PORTFOLIO_KEY,JSON.stringify(next))){status.textContent='Não foi possível salvar. Verifique o armazenamento do navegador.';return;}
+      portfolioItems=next;ctRfDraft={...d,id};await storageSet('portfolio-initialized-v1','true');renderPortfolio();ctRfSaved();
+      f.querySelector('[type="submit"]').textContent='Salvar alterações';status.textContent='Ativo salvo e disponível na Minha Carteira.';
+    };
+    ctRfResult();ctRfSaved();
+  }
+
   function renderCtResumo(){
     const el = document.getElementById('ctPanelResumo');
     if(!el) return;
+    const portfolioWrap=document.getElementById('ctPortfolioWrap');
+    const portfolioScroll=document.getElementById('portfolioList');
+    const savedPortfolioScroll=portfolioScroll?portfolioScroll.scrollTop:0;
+    if(portfolioWrap)portfolioWrap.remove();
     const byM = ctOptionResultByMonth();
     let totR=0, totP=0, totRes=0, totN=0, totPrem=0;
     Object.keys(byM).forEach(function(k){
@@ -13905,11 +14288,10 @@ contextCharts: [
         '<div class="ct-chart-card"><div class="ct-chart-card-head"><h4>Compra e venda de ações por mês</h4>'+ctYearSelectHtml('ctStockYearSel')+'</div><div class="ct-chart-wrap" id="ctStockBarsWrap">'+stockBar.html+'</div></div>'+
         '<div class="ct-chart-card"><h4>Distribuição por segmento</h4><div class="ct-chart-wrap" id="ctPieWrap">'+pieData.html+'</div></div>'+
       '</div>'+
-      '<div class="ct-card"><h3>📅 Renda mensal — opções</h3>'+
-      '<div class="ct-table-wrap"><table class="ct-table"><thead><tr><th>Mês</th><th>Recebido</th><th>Pago</th><th>Resultado</th><th>Ops</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
-      '<p class="ct-hint">Totais a partir da aba Opções · salvos neste navegador (localStorage).</p></div>'+
+      ctRfHtml()+
       '</div>'+
       '<aside class="ct-calc-side">'+
+        '<div id="ctCompactPortfolioMount"></div>'+
         '<div class="ct-calc" id="ctCalcNormal">'+
           '<h4>🧮 Calculadora</h4>'+
           '<input id="ctCalcDisplay" readonly value="0" style="width:100%;box-sizing:border-box;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px;font-family:var(--font-mono);font-size:18px;text-align:right;margin-bottom:8px"/>'+
@@ -13931,11 +14313,14 @@ contextCharts: [
           '<div class="ct-calc-out" id="ctPmOut">PM = —</div>'+
         '</div>'+
       '</aside></div>';
+    const portfolioMount=document.getElementById('ctCompactPortfolioMount');
+    if(portfolioWrap&&portfolioMount){portfolioMount.replaceWith(portfolioWrap);portfolioWrap.classList.add('show');if(portfolioScroll)portfolioScroll.scrollTop=savedPortfolioScroll;}
     ctBindMonthlyBarTip(document.getElementById('ctBarsWrap'), barData.meta);
     ctBindStockBarTip(document.getElementById('ctStockBarsWrap'), stockBar.meta);
     ctBindPieTip(document.getElementById('ctPieWrap'), pieData.meta);
     ctBindCalc();
     ctBindPmCalc();
+    ctRfBind();
     function onYearChange(sel){
       if(!sel) return;
       sel.addEventListener('change', function(){
@@ -14248,6 +14633,7 @@ contextCharts: [
     renderCtAcoes();
     renderCtOpcoes();
     renderCtCripto();
+    try{ renderPortfolio(); }catch(e){}
     try{
       const empty = !(ctData.positions&&ctData.positions.length) &&
         !(ctData.stockOps&&ctData.stockOps.length) &&
@@ -14301,6 +14687,9 @@ contextCharts: [
     if(pa) pa.classList.toggle('active', t==='acoes');
     if(po) po.classList.toggle('active', t==='opcoes');
     if(pc) pc.classList.toggle('active', t==='cripto');
+    const pw = document.getElementById('ctPortfolioWrap');
+    if(pw) pw.classList.toggle('show', t==='resumo');
+    if(t==='resumo'){ try{ renderPortfolio(); }catch(e){} }
     try{ sessionStorage.setItem('macro-carteira-tab', t); }catch(e){}
     if(!skipHash){
       const hash = t==='resumo' ? '#carteira-trader' : '#carteira-trader-'+t;
@@ -14444,6 +14833,8 @@ contextCharts: [
     try{
       ctData = { positions: [], stockOps: [], optionOps: [], crypto: [] };
       if(typeof ctSave === 'function') await ctSave();
+      portfolioItems=portfolioItems.filter(item=>!item.fixedIncome);ctRfDraft=null;
+      await savePortfolio();renderPortfolio();
       // limpa chaves antigas possíveis
       try{
         if(typeof CT_KEY !== 'undefined' && CT_KEY) localStorage.removeItem(CT_KEY);
@@ -15279,7 +15670,9 @@ contextCharts: [
         positions: ctData.positions||[],
         stockOps: ctData.stockOps||[],
         optionOps: ctData.optionOps||[],
-        crypto: ctData.crypto||[]
+        crypto: ctData.crypto||[],
+        portfolioDetails: portfolioItems.filter(item=>!item.fixedIncome),
+        fixedIncome: portfolioItems.filter(item=>item.fixedIncome)
       };
       const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
       const a = document.createElement('a');
@@ -15304,6 +15697,18 @@ contextCharts: [
         ctData.stockOps = Array.isArray(p.stockOps)?p.stockOps:[];
         ctData.optionOps = Array.isArray(p.optionOps)?p.optionOps:[];
         ctData.crypto = Array.isArray(p.crypto)?p.crypto:[];
+        if(Array.isArray(p.portfolioDetails)){
+          if(!p.portfolioDetails.every(item=>item&&typeof item.asset==='string'&&!item.fixedIncome))throw new Error('Dados de ativos inválidos');
+          const restored=p.portfolioDetails.map(item=>({...item,id:item.id||ctUid()})).concat(portfolioItems.filter(item=>item.fixedIncome));
+          if(!await storageSet(PORTFOLIO_KEY,JSON.stringify(restored)))throw new Error('Não foi possível salvar os ativos');
+          portfolioItems=restored;renderPortfolio();
+        }
+        if(Array.isArray(p.fixedIncome)){
+          if(!p.fixedIncome.every(item=>item && typeof item.asset==='string' && ctRfValid(item.fixedIncome))) throw new Error('Cadastro de renda fixa inválido');
+          const next=portfolioItems.filter(item=>!item.fixedIncome).concat(p.fixedIncome.map(item=>({...item,id:item.id||ctUid(),type:'renda_fixa'})));
+          if(!await storageSet(PORTFOLIO_KEY,JSON.stringify(next))) throw new Error('Não foi possível salvar a renda fixa');
+          portfolioItems=next;ctRfDraft=null;renderPortfolio();
+        }
         await ctSave();
         renderCarteiraTrader();
         alert('Carteira carregada com sucesso.');
